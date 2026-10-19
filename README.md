@@ -7,11 +7,13 @@
 | `/` | Portofolio (`site/`) |
 | `/demo/katering/` | Dapur Lestari, Flask + SQLite (`apps/katering`) |
 | `/demo/stokku/` | Stokku kasir + inventori, Flask + SQLite (`apps/stokku`) |
+| `/demo/stocklab/` | StockLab (backtesting saham), Flask + JavaScript (`apps/stocklab`) |
 | `/demos/warung/`, `/demos/barbershop/` | Dua website statis |
 | `/healthz` | Cek hidup untuk hosting |
 
-Dua proyek lain butuh runtime sendiri, jadi dihubungkan lewat `site/projects.js`:
-**Mahjong** (Node.js + WebSocket) → redirect ke situsnya; **StockLab** (Streamlit) → embed dari Streamlit Community Cloud. Keduanya gratis dan tidak memakai kuota hosting utama.
+Satu proyek butuh runtime sendiri: **Mahjong** (Node.js + WebSocket) dihubungkan lewat `site/projects.js` dengan tipe `redirect` (klik langsung pindah ke situsnya). StockLab sudah ditulis ulang dari Streamlit ke Flask + JavaScript (kode di `E:\Project\STOCKLAB-WEB`), jadi ikut satu URL.
+
+**Catatan StockLab:** butuh numpy, pandas, scipy, scikit-learn, dan plotly (sekitar 400 MB terpasang) serta CPU yang layak. Di laptop biasa backtest ±20 detik, Validasi ±8 menit, Lintas saham ±4 menit; di hosting gratis bisa beberapa kali lebih lama. Bila pustakanya tidak terpasang, server tetap jalan dan panel StockLab menampilkan penjelasan. Di PythonAnywhere gratis (disk 512 MB) StockLab kemungkinan tidak muat; Render gratis (RAM 512 MB) cukup untuk satu pengunjung.
 
 ## Jalankan lokal
 
@@ -31,8 +33,8 @@ Cukup satu web service Python (WSGI). Pilih salah satu:
 Aturan penting: **satu proses saja** (jangan banyak worker), karena data demo direset saat start dan pembatas login ada di memori. Data demo berada di `DATA_DIR` (default folder sementara) dan hilang saat server restart, sesuai maksudnya.
 
 ## Mengubah isi
-- Panel dan link: edit `site/projects.js` (isi `url` StockLab dan Mahjong setelah hosting mereka jadi; kosong = "Demo segera").
-- Aplikasi Flask di `apps/` adalah **salinan** dari `E:\Project\UMKM`. Setelah proyek aslinya berubah, jalankan `.\sync_apps.ps1`.
+- Panel dan link: edit `site/projects.js` (isi `url` Mahjong setelah hostingnya jadi; kosong = "Demo segera").
+- Aplikasi di `apps/` adalah **salinan** dari `E:\Project\UMKM` dan `E:\Project\STOCKLAB-WEB`. Setelah proyek aslinya berubah, jalankan `.\sync_apps.ps1`.
 
 ## Keamanan singkat
 Hanya folder `site/` yang bisa diunduh (percobaan `/server.py`, `/apps/...`, `/../` dijawab 404). Halaman hanya boleh dibingkai oleh situs ini sendiri (`X-Frame-Options: SAMEORIGIN`). Setiap aplikasi memakai nama cookie sesi sendiri, jadi login Dapur Lestari dan Stokku tidak saling bocor.
