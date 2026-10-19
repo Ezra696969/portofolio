@@ -23,8 +23,8 @@ const PROJECTS = [
     title: "Dapur Lestari", sub: "Form pesanan + admin (contoh UMKM)",
     desc: "Pesanan tersimpan di database, admin dengan login, filter status, dan ekspor CSV.",
     tags: ["Python", "Flask", "SQLite"], img: "img/katering.png",
-    url: "", // isi setelah di-deploy, mis. "https://USERNAME.pythonanywhere.com/"
-    hint: "", // mis. "Admin: klik Admin di bawah halaman, sandi demo: ..." (samakan dengan DEMO_HINT)
+    url: "demo/katering/", // dilayani server.py (satu URL dengan portofolio)
+    hint: "Untuk melihat admin, klik \"Admin\" di bagian bawah halaman; kata sandi demo tertera di halaman login.",
     repo: ""
   },
   {
@@ -32,8 +32,8 @@ const PROJECTS = [
     title: "Stokku", sub: "Kasir + inventori, dua peran (contoh UMKM)",
     desc: "Kasir (POS) dan admin: penjualan otomatis mengurangi stok, laporan, kelola pegawai.",
     tags: ["Python", "Flask", "SQLite"], img: "img/stokku.png",
-    url: "",
-    hint: "", // mis. "Login admin / kasir: ... (data demo)"
+    url: "demo/stokku/",
+    hint: "Akun demo (admin dan kasir) tertera di halaman login. Coba keduanya untuk melihat perbedaan peran.",
     repo: ""
   },
   {

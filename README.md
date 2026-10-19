@@ -1,31 +1,38 @@
 # Situs Portofolio — Greg Ezra
 
-Situs statis (HTML/CSS/JS, tanpa build). Klik panel proyek → website proyek tampil langsung di penampil (iframe) dan bisa dipakai penuh. Game (mahjong) memakai redirect ke situsnya.
+**Satu aplikasi, satu URL.** Halaman portofolio berisi panel proyek. Proyek baru dimuat **hanya saat panelnya diklik** (iframe dibuat saat itu juga); setelah itu bisa dipakai penuh.
 
-## Lihat lokal
+| Alamat | Isi |
+|---|---|
+| `/` | Portofolio (`site/`) |
+| `/demo/katering/` | Dapur Lestari, Flask + SQLite (`apps/katering`) |
+| `/demo/stokku/` | Stokku kasir + inventori, Flask + SQLite (`apps/stokku`) |
+| `/demos/warung/`, `/demos/barbershop/` | Dua website statis |
+| `/healthz` | Cek hidup untuk hosting |
+
+Dua proyek lain butuh runtime sendiri, jadi dihubungkan lewat `site/projects.js`:
+**Mahjong** (Node.js + WebSocket) → redirect ke situsnya; **StockLab** (Streamlit) → embed dari Streamlit Community Cloud. Keduanya gratis dan tidak memakai kuota hosting utama.
+
+## Jalankan lokal
 
 ```powershell
-python -m http.server 8110 --directory E:\Project\PORTFOLIO
+pip install -r requirements.txt
+python server.py          # http://127.0.0.1:8000
 ```
 
-Buka http://127.0.0.1:8110. Tautan langsung ke satu proyek: `...#warung`, `...#stokku`, dst.
+Kata sandi demo dibuat acak dan dicetak di log bila `DEMO_ADMIN_PASSWORD` / `DEMO_KASIR_PASSWORD` tidak diset. Sandi demo juga tampil di halaman login demo (memang disengaja, untuk publik), jadi **pakai sandi khusus demo**.
 
-## Menambah / mengubah proyek
-Edit **`projects.js`** saja. Isi `url` setelah demo online tersedia; kosong = panel menampilkan "Demo segera".
+## Deploy ke SATU hosting gratis
+Cukup satu web service Python (WSGI). Pilih salah satu:
 
-| Proyek | Yang perlu diisi di `url` |
-|---|---|
-| warung, barbershop | Sudah jalan (statis, ada di `demos/`). |
-| katering, stokku | Alamat Flask yang sudah di-deploy (PythonAnywhere/Render). Jalankan dengan `DEMO_MODE=1` dan `EMBED_DEMO=1` (lihat di bawah; `render.yaml` sudah menyiapkan). |
-| stocklab | Alamat Streamlit Cloud + `?embed=true`. |
-| mahjong | Alamat game (Render/Hugging Face). Tipe `redirect`: klik langsung pindah. |
+- **Render.com:** push folder ini ke repo GitHub → New → Blueprint → pilih repo (`render.yaml` sudah siap). Isi `DEMO_ADMIN_PASSWORD` dan `DEMO_KASIR_PASSWORD`. Paket gratis tertidur saat sepi; kunjungan pertama menunggu ±30 detik.
+- **PythonAnywhere (gratis, 1 web app):** upload folder, buat virtualenv dan `pip install -r requirements.txt`, di file WSGI tulis `from wsgi import application`, set variabel lingkungan di tab Web.
 
-## Syarat agar Flask jalan di dalam iframe
-Portofolio dan aplikasi berbeda situs, jadi cookie sesi harus `SameSite=None; Secure` (butuh HTTPS). Di server aplikasi set variabel lingkungan `EMBED_DEMO=1` (juga `ADMIN_PASSWORD` dan `SECRET_KEY`). Safari dan mode penyamaran sering memblokir cookie pihak ketiga; karena itu tombol **Buka di tab baru** selalu tersedia sebagai cadangan.
+Aturan penting: **satu proses saja** (jangan banyak worker), karena data demo direset saat start dan pembatas login ada di memori. Data demo berada di `DATA_DIR` (default folder sementara) dan hilang saat server restart, sesuai maksudnya.
 
-## Deploy (GitHub Pages)
-1. Buat repo `Ezra696969.github.io` (atau repo apa saja lalu aktifkan Pages).
-2. Push isi folder ini, Settings → Pages → Deploy from branch `main`.
-3. Situs hidup di `https://ezra696969.github.io/`.
+## Mengubah isi
+- Panel dan link: edit `site/projects.js` (isi `url` StockLab dan Mahjong setelah hosting mereka jadi; kosong = "Demo segera").
+- Aplikasi Flask di `apps/` adalah **salinan** dari `E:\Project\UMKM`. Setelah proyek aslinya berubah, jalankan `.\sync_apps.ps1`.
 
-`demos/warung` dan `demos/barbershop` adalah salinan dari `E:\Project\UMKM`. Kalau proyek aslinya diubah, salin ulang.
+## Keamanan singkat
+Hanya folder `site/` yang bisa diunduh (percobaan `/server.py`, `/apps/...`, `/../` dijawab 404). Halaman hanya boleh dibingkai oleh situs ini sendiri (`X-Frame-Options: SAMEORIGIN`). Setiap aplikasi memakai nama cookie sesi sendiri, jadi login Dapur Lestari dan Stokku tidak saling bocor.
