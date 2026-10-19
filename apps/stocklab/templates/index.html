@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="{{ request.script_root }}/">
+<title>StockLab</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='25' font-size='26' text-anchor='middle' fill='%23FF9F0A'%3E%E2%97%90%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<div class="app">
+  <aside id="sidebar" aria-label="Pengaturan"></aside>
+  <div class="main">
+    <div class="topbar"><button id="toggle" aria-label="Tampilkan/sembunyikan panel kiri">☰</button><h1>StockLab</h1></div>
+    <p class="subtitle">Lab backtesting model ML — walk-forward, biaya transaksi, dan pemeriksaan yang berusaha mementahkan hasilnya.</p>
+
+    <div class="row top">
+      <section class="glass" id="p-chart"></section>
+      <section class="glass" id="p-chat"></section>
+    </div>
+    <div class="row bottom">
+      <section class="glass" id="p-model"></section>
+      <section class="glass" id="p-indicators"></section>
+      <section class="glass" id="p-params"></section>
+    </div>
+
+    <div class="btnrow">
+      <button class="btn primary" id="b-run">Jalankan</button>
+      <button class="btn" id="b-validate" disabled>Validasi</button>
+      <button class="btn" id="b-cross" disabled title="Butuh minimal dua aset; pilih di panel kiri.">Lintas saham</button>
+      <span></span>
+    </div>
+    <div id="status"></div>
+
+    <section class="glass" id="p-validation" style="margin-bottom:1rem"></section>
+    <section class="glass" id="p-cross"></section>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@3.0.1/plotly.min.js"></script>
+<script src="static/app.js"></script>
+</body>
+</html>

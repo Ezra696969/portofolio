@@ -41,7 +41,8 @@ const PROJECTS = [
     title: "StockLab", sub: "Backtesting saham IDX",
     desc: "Lab backtesting model ML: walk-forward, biaya transaksi, dan pemeriksaan yang berusaha mementahkan hasilnya.",
     tags: ["Python", "Streamlit", "Pandas"], img: "img/stocklab.png",
-    url: "", // mis. "https://NAMA-APP.streamlit.app/?embed=true"
+    url: "demo/stocklab/", // StockLab versi Flask/JS, dilayani server.py (satu URL)
+    hint: "Tekan Jalankan untuk backtest. Validasi dan Lintas saham melatih ulang model puluhan kali, jadi bisa memakan beberapa menit.",
     repo: "https://github.com/Ezra696969/stocklab"
   },
   {

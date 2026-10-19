@@ -1,2 +1,9 @@
 Flask>=3.0
 waitress>=3.0
+# StockLab (opsional; bila tidak terpasang, panel StockLab menampilkan penjelasan)
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+scikit-learn>=1.4
+plotly>=5.18
+yfinance>=0.2.40

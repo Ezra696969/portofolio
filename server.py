@@ -3,6 +3,7 @@
   /                  halaman portofolio (site/)
   /demo/katering/    aplikasi Flask Dapur Lestari   (apps/katering)
   /demo/stokku/      aplikasi Flask Stokku          (apps/stokku)
+  /demo/stocklab/    StockLab (Flask + JS)          (apps/stocklab)  -- butuh numpy/pandas/scikit-learn/plotly
 
 Aplikasi demo dimuat saat server start dan hanya dipanggil bila panelnya diklik.
 Data demo direset tiap server start (DEMO_MODE=1). Satu proses saja (jangan pakai banyak worker).
@@ -61,8 +62,42 @@ def load_demo(name, hint):
                 os.environ[k] = v
 
 
+
+def load_stocklab():
+    """StockLab butuh pustaka sains data yang berat. Bila tidak terpasang (hosting kecil),
+    kembalikan halaman penjelasan alih-alih membuat seluruh situs gagal start."""
+    folder = ROOT / "apps" / "stocklab"
+    env = {"SESSION_COOKIE_NAME": "sess_stocklab", "STOCKLAB_CACHE_DIR": str(DATA / "stocklab_cache")}
+    saved = {k: os.environ.get(k) for k in env}
+    os.environ.update(env)
+    sys.path.insert(0, str(folder))
+    try:
+        from stocklab_web.app import create_app
+        return create_app()
+    except Exception as error:  # ImportError dari numpy/pandas/sklearn/plotly, dsb.
+        print(f"[demo] StockLab tidak dimuat: {type(error).__name__}: {error}", file=sys.stderr)
+        sys.path.remove(str(folder))
+        fallback = Flask("stocklab_off", static_folder=None)
+
+        @fallback.route("/", defaults={"path": ""})
+        @fallback.route("/<path:path>")
+        def off(path):
+            return ("<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
+                    "<body style='font-family:system-ui;background:#0b0b0f;color:#eee;padding:2rem;max-width:560px;margin:auto'>"
+                    "<h2>StockLab tidak aktif di server ini</h2><p>Pustaka sains data (numpy, pandas, scikit-learn, plotly) "
+                    "belum terpasang atau server terlalu kecil untuk menjalankannya. Kode dan cara menjalankannya ada di GitHub.</p>"), 503
+        return fallback
+    finally:
+        for k, v in saved.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+
+
 katering = load_demo("katering", f"Kata sandi admin demo: {ADMIN_PW}")
 stokku = load_demo("stokku", f"Akun demo: admin / {ADMIN_PW}  ·  kasir / {KASIR_PW}")
+stocklab = load_stocklab()
 
 root = Flask("portfolio", static_folder=None)
 
@@ -95,7 +130,7 @@ def secure_headers(wsgi):
     return app
 
 
-application = secure_headers(DispatcherMiddleware(root, {"/demo/katering": katering, "/demo/stokku": stokku}))
+application = secure_headers(DispatcherMiddleware(root, {"/demo/katering": katering, "/demo/stokku": stokku, "/demo/stocklab": stocklab}))
 if os.environ.get("TRUST_PROXY") == "1":
     application = ProxyFix(application, x_for=1, x_proto=1, x_host=1)
 
