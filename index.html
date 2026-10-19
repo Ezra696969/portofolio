@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Greg Ezra — Portofolio</title>
+<meta name="description" content="Portofolio Greg Ezra, mahasiswa Teknologi Sains Data UNAIR: website UMKM, aplikasi web, analisis saham, dan game.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hero">
+  <p class="eyebrow">Portofolio</p>
+  <h1>Greg Ezra</h1>
+  <p class="lead">Mahasiswa Teknologi Sains Data UNAIR. Saya membuat website untuk UMKM, aplikasi web dengan database, riset saham, dan game multiplayer. <b>Klik panel mana saja untuk mencobanya langsung.</b></p>
+  <nav class="links">
+    <a href="https://github.com/Ezra696969" target="_blank" rel="noopener">GitHub ↗</a>
+    <a href="mailto:gregezra69@gmail.com">Email</a>
+  </nav>
+</header>
+
+<main>
+  <div class="filters" id="filters" role="group" aria-label="Filter proyek"></div>
+  <section class="grid" id="grid" aria-live="polite"></section>
+  <p class="foot-note">Semua usaha pada contoh UMKM bersifat fiktif. Data di demo hanyalah data contoh.</p>
+</main>
+
+<!-- penampil proyek -->
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vTitle" hidden>
+  <div class="vbar">
+    <button class="vbtn" id="vClose" aria-label="Tutup (Esc)">← Kembali</button>
+    <b id="vTitle"></b>
+    <span class="vsp"></span>
+    <div class="seg" id="vDev" role="group" aria-label="Ukuran layar">
+      <button data-d="desktop" class="on">Desktop</button><button data-d="hp">HP</button>
+    </div>
+    <button class="vbtn" id="vReload" aria-label="Muat ulang">↻</button>
+    <a class="vbtn" id="vOpen" target="_blank" rel="noopener">Buka di tab baru ↗</a>
+  </div>
+  <p class="vhint" id="vHint" hidden></p>
+  <div class="vstage" id="vStage"></div>
+</div>
+
+<script src="projects.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
