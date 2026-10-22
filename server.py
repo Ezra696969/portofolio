@@ -83,9 +83,12 @@ def load_stocklab():
         @fallback.route("/<path:path>")
         def off(path):
             return ("<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
-                    "<body style='font-family:system-ui;background:#0b0b0f;color:#eee;padding:2rem;max-width:560px;margin:auto'>"
-                    "<h2>StockLab tidak aktif di server ini</h2><p>Pustaka sains data (numpy, pandas, scikit-learn, plotly) "
-                    "belum terpasang atau server terlalu kecil untuk menjalankannya. Kode dan cara menjalankannya ada di GitHub.</p>"), 503
+                    "<title>StockLab</title>"
+                    "<body style='font-family:system-ui;background:#0b0b0f;color:#eee;padding:1.5rem;max-width:640px;margin:auto'>"
+                    "<h2>Demo StockLab tidak aktif di server ini</h2><p style='color:#aab'>Hosting gratis ini tidak punya ruang dan CPU untuk "
+                    "pustaka sains data (numpy, pandas, scikit-learn). Berikut cuplikan hasilnya; kode lengkapnya ada di "
+                    "<a style='color:#FF9F0A' href='https://github.com/Ezra696969/stocklab' target='_blank' rel='noopener'>GitHub</a>.</p>"
+                    "<img src='../../img/stocklab.png' alt='Cuplikan StockLab' style='width:100%;border-radius:12px;border:1px solid #333'></body>"), 503
         return fallback
     finally:
         for k, v in saved.items():

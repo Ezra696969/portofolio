@@ -28,7 +28,7 @@ Kata sandi demo dibuat acak dan dicetak di log bila `DEMO_ADMIN_PASSWORD` / `DEM
 Cukup satu web service Python (WSGI). Pilih salah satu:
 
 - **Render.com:** push folder ini ke repo GitHub → New → Blueprint → pilih repo (`render.yaml` sudah siap). Sandi demo (publik) sudah tertulis di `render.yaml`, tidak ada yang perlu diisi. Paket gratis tertidur saat sepi; kunjungan pertama menunggu ±30 detik.
-- **PythonAnywhere (gratis, 1 web app):** upload folder, buat virtualenv dan `pip install -r requirements.txt`, di file WSGI tulis `from wsgi import application`, set variabel lingkungan di tab Web.
+- **PythonAnywhere (gratis, tanpa kartu):** ikuti [PYTHONANYWHERE.md](PYTHONANYWHERE.md). Semua panel hidup kecuali StockLab (diganti cuplikan dan tautan GitHub).
 
 Aturan penting: **satu proses saja** (jangan banyak worker), karena data demo direset saat start dan pembatas login ada di memori. Data demo berada di `DATA_DIR` (default folder sementara) dan hilang saat server restart, sesuai maksudnya.
 
