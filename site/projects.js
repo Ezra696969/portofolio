@@ -41,9 +41,8 @@ const PROJECTS = [
     title: "StockLab", sub: "Backtesting saham IDX",
     desc: "Lab backtesting model ML: walk-forward, biaya transaksi, dan pemeriksaan yang berusaha mementahkan hasilnya.",
     tags: ["Python", "Flask", "JavaScript"], img: "img/stocklab.png",
-    badge: "Cuplikan",   // di hosting kecil StockLab nonaktif; hapus baris ini bila server punya numpy/pandas/scikit-learn
     url: "demo/stocklab/", // StockLab versi Flask/JS, dilayani server.py (satu URL)
-    hint: "Demo interaktif butuh server dengan pustaka sains data; di hosting gratis ini ditampilkan cuplikan. Kode lengkap ada di GitHub.",
+    hint: "Tekan Jalankan untuk backtest. Validasi dan Lintas saham melatih ulang model puluhan kali, jadi di hosting gratis bisa memakan beberapa menit.",
     repo: "https://github.com/Ezra696969/stocklab"
   },
   {
