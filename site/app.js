@@ -20,7 +20,7 @@ function thumb(p) {
 function drawGrid() {
   $("grid").innerHTML = PROJECTS.filter(p => cat === "all" || p.cat === cat).map(p => {
     const live = !!p.url;
-    const badge = !live ? `<span class="badge soon">Demo segera</span>`
+    const badge = p.badge ? `<span class="badge soon">${esc(p.badge)}</span>` : !live ? `<span class="badge soon">Demo segera</span>`
       : p.type === "redirect" ? `<span class="badge go">Buka situs ↗</span>` : `<span class="badge live">● Demo hidup</span>`;
     return `<button class="card" data-id="${esc(p.id)}" aria-label="Buka ${esc(p.title)}">
       <div class="thumb">${thumb(p)}${badge}</div>
