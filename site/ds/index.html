@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Science Project — Greg Ezra</title>
+<meta name="description" content="Studi kasus data science dari lomba dan kuliah: masalah, data, pendekatan, temuan, dan peringkat.">
+<link rel="stylesheet" href="ds.css">
+</head>
+<body>
+<header class="top">
+  <p class="eyebrow">Portofolio · Riset</p>
+  <h1>Data Science Project</h1>
+  <p class="lead">Tujuh lomba dan lima belas proyek kuliah, dituturkan sebagai riset: <b>apa masalahnya, apa datanya, bagaimana kami menyerangnya, dan apa yang ternyata benar</b>. Termasuk eksperimen yang gagal.</p>
+  <div class="stats" id="stats"></div>
+</header>
+
+<main>
+  <div class="filters" id="filters" role="group" aria-label="Filter studi kasus"></div>
+  <section class="grid" id="grid" aria-live="polite"></section>
+  <p class="foot">Dataset tidak dipublikasikan. Angka berasal dari notebook, berkas hasil, dan catatan kerja saya.</p>
+</main>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle" hidden>
+  <div class="sbar"><button class="back" id="sBack">← Semua studi kasus</button><span class="sp"></span><span class="badge" id="sBadge"></span></div>
+  <article class="case" id="case"></article>
+</div>
+
+<script src="ds.js"></script>
+</body>
+</html>

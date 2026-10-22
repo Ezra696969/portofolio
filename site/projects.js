@@ -37,6 +37,15 @@ const PROJECTS = [
     repo: ""
   },
   {
+    id: "ds", cat: "data", type: "embed",
+    title: "Data Science Project", sub: "Studi kasus lomba dan kuliah (Python & R)",
+    desc: "Tujuh lomba dan lima belas proyek kuliah, dituturkan sebagai riset: masalah, data, pendekatan, temuan, dan peringkat.",
+    tags: ["Python", "R", "Machine Learning", "Statistika"], img: "img/ds.png",
+    url: "ds/index.html",
+    hint: "Klik kartu mana pun untuk membaca studi kasusnya. Dataset tidak dipublikasikan; notebook terbaik ditautkan ke GitHub.",
+    repo: "https://github.com/Ezra696969/data-science-lomba"
+  },
+  {
     id: "stocklab", cat: "data", type: "embed",
     title: "StockLab", sub: "Backtesting saham IDX",
     desc: "Lab backtesting model ML: walk-forward, biaya transaksi, dan pemeriksaan yang berusaha mementahkan hasilnya.",

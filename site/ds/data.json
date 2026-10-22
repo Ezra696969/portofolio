@@ -1,0 +1,1389 @@
+[
+ {
+  "id": "action-2026",
+  "repo": "lomba",
+  "repo_name": "data-science-lomba",
+  "folder": "01-action-2026",
+  "title": "Membongkar Bahasa Sandi Warganet: Memetakan 9 Pilar Layanan Publik dari 58 Ribu Komentar",
+  "subtitle": "ACTION 2026 · Data Mining · klasifikasi multi-label teks media sosial yang sengaja diacak",
+  "period": "Okt 2026 (masih berjalan)",
+  "lang": "Python",
+  "tags": [
+   "NLP",
+   "IndoBERT",
+   "IndoBERTweet",
+   "Multi-label",
+   "Ensemble"
+  ],
+  "metrics": [
+   [
+    "Skor publik terbaik saya",
+    "0,93360"
+   ],
+   [
+    "Baseline TF-IDF",
+    "0,83751"
+   ],
+   [
+    "Papan atas (22 Okt)",
+    "≈ 0,941"
+   ]
+  ],
+  "masalah": "Komentar media sosial tentang layanan publik harus dipilah ke 9 pilar layanan secara multi-label: satu komentar bisa memuat beberapa pilar. Skor adalah rata-rata macro-F1 dari 9 kolom label. Tantangannya, teks sengaja diacak (homoglif Cyrillic dan Yunani, huruf lebar penuh, leetspeak, huruf terpisah, dan kata yang digeser huruf ala sandi Caesar), dan label sangat dipengaruhi oleh post tempat komentar itu berada.",
+  "data": "Train 23.297 baris dan test 34.687 baris. Train memuat 105 caption post, test 161 caption, dan tidak ada irisan di antara keduanya. Karena itu validasi wajib dikelompokkan per post, bukan per baris.",
+  "pendekatan": [
+   "Dekoder noise yang kosakatanya hanya dibangun dari train: normalisasi Unicode, peta homoglif, penggabungan huruf terpisah, leet, elongasi, dan Caesar. Dekoder memulihkan sekitar 17% token langka.",
+   "Fine-tuning IndoBERT (base dan large), IndoBERTweet, dan varian lain pada pasangan kalimat (komentar, caption), 5 fold yang dikelompokkan per post.",
+   "Agregasi thread leave-one-out dan ambang per pilar, dievaluasi dengan nested CV: ambang dan bobot dipilih dari fold lain supaya skor tidak optimis.",
+   "Konteks thread sebagai input: beberapa komentar lain dari post yang sama (tanpa label) ikut dibaca model, diacak ulang tiap epoch sebagai augmentasi dan dirata-rata pada 2 sampel saat inferensi.",
+   "Blend lebar lintas keluarga model, dipilih karena stabilitasnya, bukan karena kombinasi terbaik di CV."
+  ],
+  "temuan": [
+   "Label ditentukan terutama oleh post. Sumber galat terbesar adalah proporsi komentar relevan per post, yaitu gaya anotator, bukan kesulitan bahasa.",
+   "Lompatan terbesar datang dari konteks thread pada input model (sekitar +0,0195 nested pada IndoBERT-base), bukan dari model yang lebih besar. Blend model sejenis cepat jenuh di sekitar 0,915 nested.",
+   "LLM zero-shot (Qwen2.5-VL-3B) pada sampel train hanya mencapai AUC 0,80 dibanding 0,988 model fine-tune, dan jarang benar saat model kami salah, jadi tidak menambah informasi. Metadata sebagai fitur stacker malah menurunkan skor 0,007.",
+   "Skor publik naik dari 0,83751 (TF-IDF) ke 0,92726 (blend), 0,93204 (konteks thread), dan 0,93360 (blend 6 model berkonteks). Blend lebar menang di leaderboard walau nested lokalnya lebih rendah dari kombinasi terbaik di CV."
+  ],
+  "catatan": "Lomba masih berjalan per 22 Okt 2026. Aturan melarang berbagi kode antar-tim, jadi **kode sengaja belum dipublikasikan**; halaman ini hanya memuat metode dan hasil. Angka leaderboard diambil dari catatan kerja per 22 Okt 2026.",
+  "kode": "menyusul",
+  "status": "berjalan",
+  "peringkat": {
+   "entries": [
+    {
+     "label": "Peringkat akhir",
+     "pos": null,
+     "total": null
+    }
+   ]
+  },
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-lomba/tree/main/01-action-2026",
+  "files": []
+ },
+ {
+  "id": "joints-inspire-2026",
+  "repo": "lomba",
+  "repo_name": "data-science-lomba",
+  "folder": "02-joints-inspire-ugm-2026",
+  "title": "Meramal Layar Perak: Memprediksi Tiket Bioskop 7 Hari ke Depan dari 3 Hari Pertama",
+  "subtitle": "JOINTS x INSPIRE UGM 2026 · forecasting deret waktu tiket bioskop (D4–D10)",
+  "period": "Sep–Okt 2026",
+  "lang": "Python",
+  "tags": [
+   "Forecasting",
+   "LightGBM",
+   "Hurdle model",
+   "Feature engineering",
+   "MASE"
+  ],
+  "metrics": [
+   [
+    "LB publik final",
+    "0,36493 (lebih rendah lebih baik)"
+   ],
+   [
+    "Awal tim",
+    "0,48768"
+   ],
+   [
+    "Versi notebook",
+    "±40"
+   ]
+  ],
+  "masalah": "Untuk setiap pasangan (film, klaster bioskop), prediksi total tiket harian pada hari ke-4 sampai ke-10 setelah penayangan, hanya dari penjualan hari ke-1 sampai ke-3. Metrik MASE: galat absolut dibagi rata-rata D1–D3 per pasangan, sehingga setara MAE pada rasio y/scale dan prediksi optimalnya adalah median bersyarat.",
+  "data": "Train April–September 2025 (237 film, 117 klaster). Test 163 film (Oktober 2025–Maret 2026) dengan histori D1–D3: 72.611 baris, yaitu 10.373 pasangan × 7 hari. Dari data ditemukan bahwa sebuah pasangan masuk test jika dan hanya jika ada transaksi pada D3, dan hari tanpa transaksi di train tidak tercatat sehingga harus diisi nol.",
+  "pendekatan": [
+   "Menyusun tabel latih yang meniru test: deteksi D1 per film, buang film yang jendela D1–D3-nya jatuh pada tanggal data bolong.",
+   "Alat ukur: group k-fold per judul dasar (versi IMAX, 3D, dan reguler tidak boleh terpisah) dengan bobot desil agar level skor lokal mendekati leaderboard. Walk-forward bulanan ditinggalkan karena dua kali menyesatkan.",
+   "Model hurdle distribusional LightGBM: peluang terjual, level log-rasio, dan sebaran galat, digabung menjadi median campuran. Diperkuat augmentasi umur film (D1 digeser 0–13 hari) sehingga baris latih naik dari 55 ribu menjadi sekitar 500 ribu.",
+   "Penyesuaian periode khusus dari data publik yang sumbernya dikutip: peluruhan pangsa film Lebaran diestimasi dari Lebaran 2025, kurva mudik, koreksi level Ramadan, Nyepi di Bali, dan libur Natal–Tahun Baru. Tidak ada pengali yang dikalibrasi dengan leaderboard.",
+   "Blend 4 model dan snap ke nol, dengan saklar yang bisa dimatikan satu per satu untuk ablasi."
+  ],
+  "temuan": [
+   "Sepuluh persen baris dengan galat terbesar menyumbang sekitar 75% total galat. Pasangan yang baru mulai menjual di D3 hanya sekitar 4% baris tetapi sekitar 40% galat, dan 95% di antaranya karena prediksi terlalu rendah.",
+   "Augmentasi umur memperbaiki skor lokal 0,033 di 5 dari 5 fold, tetapi satu versi justru lebih buruk di leaderboard publik (0,47094 vs 0,46062). Selisih 0,004–0,008 di leaderboard publik sebagian besar adalah noise.",
+   "Fitur yang dibuat dari model yang di-fit terpisah untuk train dan test menggeser skala dan memburuk di leaderboard. Pelajarannya: jangan membuat fitur dari model yang dilatih terpisah antara train dan test.",
+   "Banyak ide ditutup dengan bukti, bukan dibuang diam-diam: kalibrasi probabilitas, indeks permintaan, seleksi fitur, rekam jejak produser dan sutradara, serta scraping media sosial (ditolak karena definisi fitur train dan test tidak konsisten).",
+   "Skor publik turun dari 0,48768 (LightGBM pada rasio) ke 0,46062 (hurdle + kNN) dan 0,36493 pada submission final."
+  ],
+  "catatan": "Tim 3 orang. Satu kelompok fitur kompetisi diadaptasi dari notebook rekan setim, dan blending dengan notebook rekan diperbolehkan aturan lomba.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": {
+   "entries": [
+    {
+     "label": "Peringkat akhir",
+     "pos": null,
+     "total": null
+    }
+   ]
+  },
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-lomba/tree/main/02-joints-inspire-ugm-2026",
+  "files": [
+   {
+    "name": "siri-divisi-larper-final.ipynb",
+    "note": "Notebook final (submission P23)",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/02-joints-inspire-ugm-2026/notebooks/siri-divisi-larper-final.ipynb"
+   },
+   {
+    "name": "eda-lengkap.ipynb",
+    "note": "EDA: memahami data sebelum memodelkan",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/02-joints-inspire-ugm-2026/notebooks/eda-lengkap.ipynb"
+   }
+  ]
+ },
+ {
+  "id": "datascape-2026",
+  "repo": "lomba",
+  "repo_name": "data-science-lomba",
+  "folder": "03-datascape-2026",
+  "title": "Label Berisik, Kemasan Rusak: Membersihkan Data Sebelum Mengadu CNN dengan CLIP",
+  "subtitle": "DATASCAPE 2026 · klasifikasi citra kemasan (Aman / Rusak / Lainnya)",
+  "period": "Okt 2026",
+  "lang": "Python",
+  "tags": [
+   "Computer Vision",
+   "ConvNeXt",
+   "EfficientNetV2",
+   "CLIP ViT-L/14",
+   "Label noise"
+  ],
+  "metrics": [
+   [
+    "Skor publik tim (CNN)",
+    "0,89063"
+   ],
+   [
+    "CLIP v7",
+    "0,87924"
+   ],
+   [
+    "Metrik",
+    "macro-F1"
+   ]
+  ],
+  "masalah": "Mengklasifikasikan gambar kemasan ke tiga kelas: Aman, Rusak, dan Lainnya, dengan macro-F1. Kelas Lainnya hanya sekitar 58 gambar di test, sehingga satu kesalahan menggeser macro-F1 sekitar 0,003.",
+  "data": "Gambar kemasan dengan label train yang mengandung noise dan banyak near-duplicate, yang berisiko bocor antar-fold.",
+  "pendekatan": [
+   "Koreksi label train secara visual dengan aturan blok dan 256 koreksi manual atas gambar TRAIN (tidak ada label test yang dibuat manual atau oleh AI).",
+   "Deteksi near-duplicate, lalu fold StratifiedGroupKFold yang bebas kebocoran.",
+   "Tahap A: ConvNeXt-tiny sebagai detektor noise, dilanjutkan auto-clean (kemasan Rusak yang tampak utuh diturunkan ke Aman, label meragukan dibuang).",
+   "Tahap B: ConvNeXt-tiny dan EfficientNetV2-S pada label bersih dengan TTA 384/448, kalibrasi temperatur dan bias kelas dari OOF.",
+   "CLIP ViT-L/14 (hanya image encoder, resep linear-probe lalu fine-tune dengan layer-wise LR decay) pada label dan fold yang sama, lalu blend log-probabilitas 50/50 dan lookup md5 untuk duplikat persis."
+  ],
+  "temuan": [
+   "Arsitektur yang sama memberi 0,87720 pada label lama dan 0,89063 pada label bersih, yaitu selisih sekitar +0,013 yang hampir pasti berasal dari label (256 koreksi manual, kelas Lainnya diperluas dari 433 ke 558 contoh, aturan paket utuh diperluas ke ukuran 416 dan 512).",
+   "Validasi silang tidak bisa menilai perbaikan label, karena baris yang dikoreksi sengaja tidak ikut dihitung. Untuk itu dipakai gerbang non-inferioritas: pada baris yang labelnya tidak berubah, model baru tidak boleh lebih buruk dari model lama lebih dari 0,005 F1.",
+   "Blend CNN dan CLIP versi awal tidak otomatis lebih baik: 0,88339 dibanding 0,89063 untuk CNN saja. Notebook menyatakan terus terang bahwa tidak ada jaminan skor naik."
+  ],
+  "catatan": "Notebook final menggabungkan pipeline CNN rekan tim (dikreditkan di notebook) dengan bagian CLIP saya.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": {
+   "entries": [
+    {
+     "label": "Peringkat akhir",
+     "pos": null,
+     "total": null
+    }
+   ]
+  },
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-lomba/tree/main/03-datascape-2026",
+  "files": [
+   {
+    "name": "notebook-pengumpulan-cnn-clip.ipynb",
+    "note": "Notebook pengumpulan (CNN label-bersih + CLIP)",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/03-datascape-2026/notebooks/notebook-pengumpulan-cnn-clip.ipynb"
+   },
+   {
+    "name": "v9-clip-label-bersih.ipynb",
+    "note": "Resep CLIP pada label bersih (v9)",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/03-datascape-2026/notebooks/v9-clip-label-bersih.ipynb"
+   }
+  ]
+ },
+ {
+  "id": "ifest-dac-2026",
+  "repo": "lomba",
+  "repo_name": "data-science-lomba",
+  "folder": "04-ifest-dac-2026",
+  "title": "Dua Wajah Satu Lomba: Judul Berita yang Menipu dan Sub-DAS yang Kehausan",
+  "subtitle": "IFest 2026 · Data Analysis Competition · penyisihan (teks) dan final (tabular)",
+  "period": "Agu–Sep 2026",
+  "lang": "Python",
+  "tags": [
+   "NLP dari nol",
+   "Gradient boosting",
+   "Leakage",
+   "Average Precision",
+   "SHAP"
+  ],
+  "metrics": [
+   [
+    "Penyisihan: skor publik",
+    "0,94835 (macro-F1)"
+   ],
+   [
+    "Final: CV Average Precision",
+    "0,71259"
+   ],
+   [
+    "Posisi sementara penyisihan",
+    "12 (catatan 13 Sep)"
+   ]
+  ],
+  "masalah": "Penyisihan: mendeteksi apakah judul sebuah berita didukung oleh isinya (Sesuai atau Tidak Sesuai), dengan macro-F1. Ini lebih dekat ke textual entailment daripada kemiripan teks. Final: memprediksi peluang sebuah sub-DAS (HUC12) mengalami water stress bulan depan, dengan metrik Average Precision.",
+  "data": "Penyisihan: 14.397 baris train dan 3.603 baris test, sekitar 90% berlabel Sesuai. Aturan melarang bobot pra-latih, jadi semua model dilatih dari nol. Final: data tabular per sub-DAS dengan kerusakan data dan kesalahan satuan klimatologi yang harus diperbaiki.",
+  "pendekatan": [
+   "Penyisihan: 233 fitur buatan tangan (TF-IDF, LSA, NMF, LDA, word2vec dan FastText dari nol, BM25, statistik entitas dan negasi), ensemble 12 anggota (HGB, ExtraTrees, RandomForest, CatBoost, LightGBM, XGBoost, dan regresi logistik) dengan rata-rata peringkat, dan 10 aturan struktural untuk mengubah skor menjadi label.",
+   "Validasi GroupKFold berdasarkan isi artikel, karena negatif dibuat dengan mengedit judul positif dari artikel yang sama sehingga split acak bocor.",
+   "Final: perbaikan data memakai neraca air dan neraca luas pada origin yang sama, fitur V3–V6 dan G1–G3, validasi berbasis waktu, model LightGBM, XGBoost, LightGBM kuantil, dan Transformer dari nol, blend, dan uji kepatuhan otomatis terhadap aturan panitia.",
+   "Final: interpretasi dengan SHAP (TreeSHAP dari XGBoost, tanpa label test) dan confusion matrix pada titik operasi F1 tertinggi."
+  ],
+  "temuan": [
+   "Kenaikan terbesar penyisihan datang dari membaca data dan aturan, bukan dari menambah model. Memindahkan perhitungan statistik dan embedding ke baris latih saja (sebelumnya train dan test) menaikkan skor publik dari 0,94490 ke 0,94835 (+0,0035). Satu kenaikan lain (+0,0117) berasal dari artefak format data, lihat Catatan. Skor naik dari 0,87658 (v4) ke 0,94835 (v22).",
+   "Diagnostik pada pipeline 9 fitur memperlihatkan kebutaan model yang mekanis: kata negasi masuk daftar stopword sehingga fitur terbaik tidak bisa melihat negasi (recall 0,655), dan fitur kantong-kata memberi nilai identik pada pasangan yang hanya tertukar peran (recall 0,500). Pada 6.296 baris berisi unik, AUC hanya 0,677.",
+   "Final: blend akhir mencapai CV Average Precision 0,71259, naik dari 0,70739 (LightGBM + XGBoost) berkat komponen kuantil (naik di 5 dari 5 fold) dan Transformer (4 dari 5 fold). Pada ambang F1 tertinggi 0,3057: presisi 0,621, recall 0,734, F1 0,673.",
+   "Perbaikan data final memakai neraca air dan neraca luas: pada kolom ws di train, 79.756 nilai kosong terisi dan 8.032 nol palsu dikoreksi. Notebook dikunci pada seed, jumlah thread, dan CPU agar hasilnya identik antar mesin (dicek lewat sidik jari MD5)."
+  ],
+  "catatan": "Penyisihan juga menemukan artefak format pada pembuatan data (spasi tak lazim berkorelasi sempurna dengan label tertentu). Itu dicatat sebagai pelajaran tentang leakage dan kepatuhan aturan lomba, bukan sebagai prestasi pemodelan. Posisi 12 adalah catatan sementara pada 13 Sep 2026.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": {
+   "entries": [
+    {
+     "label": "Penyisihan",
+     "pos": null,
+     "total": null
+    },
+    {
+     "label": "Final",
+     "pos": null,
+     "total": null
+    }
+   ]
+  },
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-lomba/tree/main/04-ifest-dac-2026",
+  "files": [
+   {
+    "name": "penyisihan-v22.ipynb",
+    "note": "Penyisihan: versi dengan skor publik tertinggi (0,94835)",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/04-ifest-dac-2026/notebooks/penyisihan-v22.ipynb"
+   },
+   {
+    "name": "final-water-stress-v10.ipynb",
+    "note": "Final: prediksi water stress (V10)",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/04-ifest-dac-2026/notebooks/final-water-stress-v10.ipynb"
+   }
+  ]
+ },
+ {
+  "id": "find-it-dac-2026",
+  "repo": "lomba",
+  "repo_name": "data-science-lomba",
+  "folder": "05-find-it-dac-2026",
+  "title": "Wajah Asli atau Tipuan? Anti-Spoofing dengan Ensemble ConvNeXt dan EfficientNet",
+  "subtitle": "DAC FIND IT 2026 · deteksi serangan presentasi pada pengenalan wajah (6 kelas)",
+  "period": "Apr 2026",
+  "lang": "Python",
+  "tags": [
+   "Computer Vision",
+   "Face anti-spoofing",
+   "ConvNeXt-S",
+   "EfficientNet-B4",
+   "Focal loss",
+   "TTA"
+  ],
+  "metrics": [
+   [
+    "Skor publik (dari nama berkas submission)",
+    "1,0"
+   ],
+   [
+    "Kelas",
+    "6"
+   ],
+   [
+    "GPU",
+    "RTX 3050 Ti 4 GB"
+   ]
+  ],
+  "masalah": "Membedakan wajah orang sungguhan dari enam jenis kelas: orang asli, cetakan (printed), layar (screen), topeng (mask), manekin (mannequin), dan tipuan lain (unknown).",
+  "data": "Foto wajah dengan kelas yang timpang: kelas fake_printed paling sedikit. Pembagian train dan validasi dibuat otomatis secara berstrata dari folder train tunggal.",
+  "pendekatan": [
+   "Fine-tuning ConvNeXt-S dan EfficientNet-B4 (timm) dengan mixed precision, dirancang untuk VRAM 4 GB.",
+   "Focal loss (gamma 1,5), bobot kelas, dan WeightedRandomSampler untuk ketimpangan kelas.",
+   "Augmentasi ringan dengan noise dan blur tipis untuk meniru artefak serangan, CutMix/MixUp pada varian ensemble 3 model.",
+   "Stochastic Weight Averaging di epoch akhir, TTA 5–6 augmentasi, dan evaluasi pada validasi tetap sebelum submit.",
+   "Analisis kesalahan: daftar prediksi salah disimpan per gambar (mis. manekin diprediksi sebagai layar, topeng diprediksi orang asli)."
+  ],
+  "temuan": [
+   "Pola kesalahan terbesar ada pada kelas berbasis objek fisik yang mirip wajah: topeng yang dibaca sebagai orang asli dan manekin yang dibaca sebagai layar.",
+   "Berkas submission bertanda skor publik 0,99 (v1) dan 1,0 (v2); angka ini saya ambil dari nama berkas, bukan dari log resmi."
+  ],
+  "catatan": "Hanya skrip yang dipublikasikan (tanpa dataset). Nilai akurasi validasi per epoch tersimpan di berkas riwayat pelatihan lokal, belum dirangkum di sini.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": {
+   "entries": [
+    {
+     "label": "Peringkat akhir",
+     "pos": null,
+     "total": null
+    }
+   ]
+  },
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-lomba/tree/main/05-find-it-dac-2026",
+  "files": [
+   {
+    "name": "gacor_v2.py",
+    "note": "Ensemble ConvNeXt-S + EfficientNet-B4, SWA, TTA 6x",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/05-find-it-dac-2026/src/gacor_v2.py"
+   },
+   {
+    "name": "v5_gacor_pt2.py",
+    "note": "Focal loss, class weights, split berstrata, TTA 5x",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/05-find-it-dac-2026/src/v5_gacor_pt2.py"
+   }
+  ]
+ },
+ {
+  "id": "gamma-fest-2026",
+  "repo": "lomba",
+  "repo_name": "data-science-lomba",
+  "folder": "06-gamma-fest-2026",
+  "title": "Menebak Skor Sepak Bola Dunia: Semalam Grid Search dan 296 Submission",
+  "subtitle": "GAMMA FEST · prediksi skor pertandingan internasional pria dan wanita",
+  "period": "Apr–Mei 2026",
+  "lang": "Python",
+  "tags": [
+   "Regresi hitung",
+   "CatBoost Poisson",
+   "Elo",
+   "Ensemble",
+   "Metrik kustom (AW-MAE)"
+  ],
+  "metrics": [
+   [
+    "Submission dievaluasi lokal",
+    "296"
+   ],
+   [
+    "Terbaik (AW-MAE lokal)",
+    "4,648"
+   ],
+   [
+    "Model",
+    "ExtraTrees, CatBoost"
+   ]
+  ],
+  "masalah": "Memprediksi jumlah gol kedua tim pada pertandingan internasional (pria dan wanita). Skor panitia adalah AW-MAE, yaitu galat absolut berpangkat yang diberi penalti ekstra bila skor persis, hasil (menang/seri/kalah), atau selisih gol meleset, serta bobot per jenis turnamen.",
+  "data": "Satu baris per tim per pertandingan dengan Elo dan peringkat FIFA kedua tim, performa 5 dan 10 laga terakhir, rekam jejak head-to-head, hari sejak laga terakhir, populasi dan PDB negara, ketinggian venue, jarak tempuh, dan suhu.",
+  "pendekatan": [
+   "Fitur 'form kausal': statistik bergulir (3, 5, 10, 20 laga) dan head-to-head yang dihitung hanya dari laga sebelum tanggal pertandingan.",
+   "Model terpisah untuk pria dan wanita: CatBoost dengan loss Poisson, serta varian ExtraTrees 'heavy'.",
+   "Ensemble lunak pada level angka desimal sebelum pasca-proses yang konsisten cermin (tim A vs B dan B vs A), dengan grid ambang penyesuaian seri.",
+   "Menulis ulang metrik AW-MAE sebagai skrip evaluasi lokal, lalu menilai ratusan submission hasil grid search semalam (±6 jam) dengan pelacakan progres dan resume."
+  ],
+  "temuan": [
+   "Dari 296 submission yang dievaluasi, kelompok terbaik didominasi ExtraTrees 'heavy' (AW-MAE lokal 4,648), dengan variasi penyesuaian seri dan alpha hasil yang nyaris sama; selisih antar-kandidat teratas kurang dari 0,05.",
+   "Tingkat tebakan skor persis hanya sekitar 9%, dan akurasi hasil sekitar 22–24% pada evaluasi lokal. Ini menunjukkan seberapa sulit tugasnya dan mengapa penalti metrik menjadi penentu."
+  ],
+  "catatan": "Evaluasi lokal memakai ground truth buatan sendiri yang meniru metrik panitia, jadi angkanya tidak sebanding langsung dengan skor leaderboard resmi.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": {
+   "entries": [
+    {
+     "label": "Peringkat akhir",
+     "pos": null,
+     "total": null
+    }
+   ]
+  },
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-lomba/tree/main/06-gamma-fest-2026",
+  "files": [
+   {
+    "name": "heavy_exp013_plus.py",
+    "note": "Pipeline berat: CatBoost Poisson, fitur kausal, ensemble",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/06-gamma-fest-2026/src/heavy_exp013_plus.py"
+   },
+   {
+    "name": "evaluate_awmae_all.py",
+    "note": "Evaluasi lokal metrik AW-MAE",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/06-gamma-fest-2026/src/evaluate_awmae_all.py"
+   },
+   {
+    "name": "exp013-causal-form-elo.ipynb",
+    "note": "Eksperimen EXP010–EXP014",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/06-gamma-fest-2026/notebooks/exp013-causal-form-elo.ipynb"
+   },
+   {
+    "name": "evaluation_report.txt",
+    "note": "Hasil evaluasi 296 submission",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/06-gamma-fest-2026/results/evaluation_report.txt"
+   }
+  ]
+ },
+ {
+  "id": "bdc-satria-data-2026",
+  "repo": "lomba",
+  "repo_name": "data-science-lomba",
+  "folder": "07-bdc-satria-data-2026",
+  "title": "Mata Mesin Memilah Sampah: 12 Model, 3 Kelas, dan Satu Eksperimen yang Gagal",
+  "subtitle": "BDC Satria Data 2026 · klasifikasi citra sampah (Recyclable / Electronic / Organic)",
+  "period": "Jul 2026",
+  "lang": "Python",
+  "tags": [
+   "Computer Vision",
+   "ConvNeXt",
+   "EfficientNetV2",
+   "k-fold ensemble",
+   "Stacking"
+  ],
+  "metrics": [
+   [
+    "Macro-F1 validasi terbaik",
+    "0,9706"
+   ],
+   [
+    "Ensemble",
+    "12 model (3 backbone × 4 fold)"
+   ],
+   [
+    "Validasi",
+    "1.458 gambar"
+   ]
+  ],
+  "masalah": "Mengklasifikasikan gambar sampah ke tiga kelas: Recyclable, Electronic, dan Organic. Metrik macro-F1.",
+  "data": "Sekitar 24 ribu gambar latih. Validasi sebanyak 1.458 gambar dengan label yang diperiksa manual (562 Recyclable, 201 Electronic, 695 Organic).",
+  "pendekatan": [
+   "Transfer learning dengan timm: ConvNeXt-Tiny, ConvNeXt-Small, ConvNeXtV2-Tiny, dan EfficientNetV2-S, dengan mixed precision dan gradient accumulation agar muat di VRAM 8 GB.",
+   "Percobaan bertingkat (trial 1–11): satu model, ensemble 3 model, ensemble k-fold 12 model, kalibrasi, dan eksperimen stacking dengan Qwen-VL dan CLIP.",
+   "Evaluasi pada folder validasi berlabel manual: macro-F1, akurasi, dan confusion matrix."
+  ],
+  "temuan": [
+   "Ensemble 3 model mencapai macro-F1 0,9584; ensemble k-fold 12 model (3 backbone × 4 fold) naik ke 0,9706 dengan akurasi 0,9698. Kelas Electronic paling mudah (F1 0,98), Recyclable punya recall terendah (0,93).",
+   "Eksperimen stacking dengan embedding ConvNeXt, Swin, CLIP, dan sinyal Qwen-VL hanya mencapai macro-F1 0,5354. Penyebabnya, sinyal Qwen-VL yang mahal membatasi data meta-model sekitar 900 gambar, jauh dari 24 ribu gambar ensemble. Ini dilaporkan sebagai temuan negatif, bukan disembunyikan.",
+   "Konfigurasi ensemble 12 model lain (trial 10) hanya mencapai 0,9423, jadi 0,9706 bukan sekadar efek jumlah model."
+  ],
+  "catatan": "Hasil di atas adalah validasi lokal pada folder validasi berlabel manual, bukan skor leaderboard.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": {
+   "entries": [
+    {
+     "label": "Peringkat akhir",
+     "pos": null,
+     "total": null
+    }
+   ]
+  },
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-lomba/tree/main/07-bdc-satria-data-2026",
+  "files": [
+   {
+    "name": "bdc2026-baseline-convnext.ipynb",
+    "note": "Notebook awal: ConvNeXt-Tiny, AMP",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/07-bdc-satria-data-2026/notebooks/bdc2026-baseline-convnext.ipynb"
+   },
+   {
+    "name": "train_kfold.py",
+    "note": "Pelatihan k-fold (trial 5)",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/07-bdc-satria-data-2026/src/trial5/train_kfold.py"
+   },
+   {
+    "name": "ensemble_predict.py",
+    "note": "Ensemble 12 model",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/07-bdc-satria-data-2026/src/trial5/ensemble_predict.py"
+   },
+   {
+    "name": "trial5_classification_report.txt",
+    "note": "Hasil: macro-F1 0,9706",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/07-bdc-satria-data-2026/results/trial5_classification_report.txt"
+   },
+   {
+    "name": "train_stacking.py",
+    "note": "Stacking LightGBM (temuan negatif)",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/07-bdc-satria-data-2026/src/trial4_stacking/train_stacking.py"
+   },
+   {
+    "name": "stack_common.py",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/07-bdc-satria-data-2026/src/trial4_stacking/stack_common.py"
+   },
+   {
+    "name": "extract_embeddings.py",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/07-bdc-satria-data-2026/src/trial4_stacking/extract_embeddings.py"
+   },
+   {
+    "name": "extract_qwen_signal.py",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/07-bdc-satria-data-2026/src/trial4_stacking/extract_qwen_signal.py"
+   },
+   {
+    "name": "trial4_stacking_report.txt",
+    "note": "Hasil stacking: macro-F1 0,5354",
+    "url": "https://github.com/Ezra696969/data-science-lomba/blob/main/07-bdc-satria-data-2026/results/trial4_stacking_report.txt"
+   }
+  ]
+ },
+ {
+  "id": "cifar10-vit",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "01-cifar10-vision-transformer",
+  "title": "Melampaui 95,58: Vision Transformer Menaklukkan CIFAR-10 (F1-macro 98,95)",
+  "subtitle": "Data Mining II · transfer learning ViT-B/16",
+  "period": "Okt 2026",
+  "lang": "Python",
+  "tags": [
+   "Deep learning",
+   "Vision Transformer",
+   "Transfer learning",
+   "PyTorch"
+  ],
+  "metrics": [
+   [
+    "F1-macro (TTA)",
+    "98,95"
+   ],
+   [
+    "Baseline",
+    "95,58"
+   ],
+   [
+    "Selisih",
+    "+3,37"
+   ]
+  ],
+  "masalah": "Mengklasifikasikan 10.000 gambar test CIFAR-10 dengan target F1-macro di atas baseline 95,58.",
+  "data": "CIFAR-10: gambar 32×32 piksel, 10 kelas. Evaluasi pada 10.000 data test.",
+  "pendekatan": [
+   "Fine-tuning Vision Transformer ViT-B/16 yang telah dilatih pada ImageNet-21k.",
+   "Preprocessing dan augmentasi dilakukan di GPU untuk mempercepat pelatihan.",
+   "Evaluasi F1-macro dengan dan tanpa test-time augmentation (TTA), confusion matrix, dan analisis gambar yang salah diprediksi."
+  ],
+  "temuan": [
+   "F1-macro 98,87 tanpa TTA dan 98,95 dengan TTA (akurasi 98,95%), melampaui baseline 95,58 sebesar 3,37 poin.",
+   "Kelas dengan F1 tertinggi adalah frog dan terendah adalah cat, pola yang wajar karena kucing mirip anjing."
+  ],
+  "catatan": "",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/01-cifar10-vision-transformer",
+  "files": [
+   {
+    "name": "cifar10-vit-b16.ipynb",
+    "note": "Notebook lengkap",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/01-cifar10-vision-transformer/cifar10-vit-b16.ipynb"
+   }
+  ]
+ },
+ {
+  "id": "heartbeat-clustering",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "02-suara-detak-jantung",
+  "title": "Mendengar Detak Jantung: Mengelompokkan Rekaman Stetoskop Digital",
+  "subtitle": "Data Mining II · pemrosesan sinyal audio dan clustering",
+  "period": "Sep 2026",
+  "lang": "Python",
+  "tags": [
+   "Audio",
+   "Ekstraksi fitur",
+   "Clustering",
+   "Silhouette"
+  ],
+  "metrics": [
+   [
+    "k terbaik (silhouette)",
+    "2"
+   ],
+   [
+    "Data",
+    "Heartbeat Sounds set_b"
+   ],
+   [
+    "Format",
+    ".wav"
+   ]
+  ],
+  "masalah": "Apakah rekaman detak jantung dari stetoskop digital punya struktur kelompok alami yang selaras dengan label normal, murmur, dan extrasystole?",
+  "data": "Dataset Heartbeat Sounds (folder set_b): berkas audio .wav, dengan label kelas di nama berkas (normal, murmur, extrastole, dan unlabelled).",
+  "pendekatan": [
+   "Eksplorasi satu berkas audio (bentuk gelombang dan spektrum), lalu EDA seluruh berkas.",
+   "Preprocessing dan ekstraksi fitur audio.",
+   "Clustering dengan pemilihan jumlah klaster lewat silhouette."
+  ],
+  "temuan": [
+   "Jumlah klaster terbaik menurut silhouette adalah k = 2, yang kasar dibanding tiga kelas berlabel. Kesimpulan lengkap ada di bagian akhir notebook."
+  ],
+  "catatan": "",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/02-suara-detak-jantung",
+  "files": [
+   {
+    "name": "heartbeat-clustering.ipynb",
+    "note": "Notebook lengkap",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/02-suara-detak-jantung/heartbeat-clustering.ipynb"
+   }
+  ]
+ },
+ {
+  "id": "mnist-kmeans-pca",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "03-kmeans-mnist-pca",
+  "title": "Kenapa K-Means Buta pada MNIST? Normalisasi + PCA Menaikkan Silhouette 3,3×",
+  "subtitle": "Data Mining II · clustering gambar tulisan tangan",
+  "period": "Sep 2026",
+  "lang": "Python",
+  "tags": [
+   "K-Means",
+   "PCA",
+   "Silhouette",
+   "ARI",
+   "MNIST"
+  ],
+  "metrics": [
+   [
+    "Silhouette",
+    "0,0606 → 0,2001"
+   ],
+   [
+    "Kenaikan",
+    "3,3×"
+   ],
+   [
+    "ARI (PCA-10)",
+    "0,3874"
+   ]
+  ],
+  "masalah": "K-Means pada piksel mentah MNIST menghasilkan klaster yang nyaris tak terpisah. Apa yang perlu diubah agar klasternya bermakna?",
+  "data": "MNIST (gambar digit 28×28, dimuat dari Keras), dipakai tanpa label saat clustering; label hanya untuk validasi dengan ARI dan NMI.",
+  "pendekatan": [
+   "Baseline: K-Means pada piksel mentah.",
+   "Normalisasi per gambar (L2-normalize), lalu reduksi dimensi dengan PCA.",
+   "Memindai jumlah komponen PCA (5–30) dan menimbang silhouette terhadap ARI.",
+   "Validasi dengan ARI dan NMI terhadap label sebenarnya."
+  ],
+  "temuan": [
+   "Silhouette naik dari 0,0606 (baseline) menjadi 0,2001 dengan L2-normalize + PCA 10 komponen + K-Means, atau 3,3× lipat.",
+   "Ada trade-off yang jelas: makin banyak komponen PCA, silhouette turun (0,2460 pada 5 komponen menjadi 0,1312 pada 30) sementara ARI naik tipis (0,3586 menjadi 0,4020). PCA 10 dipilih sebagai titik tengah."
+  ],
+  "catatan": "",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/03-kmeans-mnist-pca",
+  "files": [
+   {
+    "name": "kmeans-mnist-pca.ipynb",
+    "note": "Notebook final",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/03-kmeans-mnist-pca/kmeans-mnist-pca.ipynb"
+   }
+  ]
+ },
+ {
+  "id": "bencana-alam-twitter",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "04-percakapan-bencana-alam",
+  "title": "Apa yang Warganet Bicarakan Saat Bumi Bergoyang? 6.659 Tweet Bencana Jan–Apr 2026",
+  "subtitle": "Data Mining II · social media mining: clustering, topic modelling, dan jaringan sosial",
+  "period": "Sep 2026",
+  "lang": "Python",
+  "tags": [
+   "Text mining",
+   "TF-IDF + K-Means",
+   "LDA",
+   "Social Network Analysis",
+   "Web scraping"
+  ],
+  "metrics": [
+   [
+    "Tweet mentah → final",
+    "6.659 → 895"
+   ],
+   [
+    "Topik LDA",
+    "7"
+   ],
+   [
+    "Komunitas jaringan",
+    "197"
+   ]
+  ],
+  "masalah": "Apa yang dibicarakan warganet Indonesia tentang bencana alam sepanjang Januari–April 2026, topik apa yang dominan, dan akun mana yang paling berpengaruh?",
+  "data": "Tweet dikumpulkan dengan tweet-harvest per hari (rentang tanggal dikalibrasi supaya tidak terpotong batas hasil pencarian). Dari 6.659 tweet mentah, pembersihan bertahap menyisakan 895 tweet: buang duplikat, retweet, tweet non-Indonesia, bencana di luar negeri, kiasan dan promosi, serta akun otomatis. Sebanyak 870 tweet siap dimodelkan.",
+  "pendekatan": [
+   "Pembersihan bertahap dengan hitungan tiap langkah, lalu EDA tren per bulan dan per jenis bencana (puncak 22 Januari 2026).",
+   "Preprocessing teks, wordcloud keseluruhan, per bulan, dan bigram.",
+   "Clustering TF-IDF + K-Means (visualisasi SVD dan t-SNE) dan topic modelling LDA dengan penentuan jumlah topik lewat coherence.",
+   "Social Network Analysis pada jaringan mention dan reply: centrality (PageRank) dan deteksi komunitas Louvain."
+  ],
+  "temuan": [
+   "Pembersihan paling banyak membuang di filter bahasa Indonesia (6.654 → 2.076) dan di penyaringan akun otomatis (1.784 → 898).",
+   "LDA memakai 7 topik. Coherence model akhir −0,0016 menunjukkan topik-topik belum sangat tegas pada data sekecil ini.",
+   "Jaringan terpecah menjadi 197 komunitas dengan modularity 0,9711, tanda percakapan tersebar di banyak kantong kecil, bukan satu pusat."
+  ],
+  "catatan": "Notebook dipublikasikan tanpa keluaran dan tanpa data tweet (akun pengguna tidak ditampilkan).",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/04-percakapan-bencana-alam",
+  "files": [
+   {
+    "name": "bencana-alam-twitter.ipynb",
+    "note": "Notebook versi final (tanpa keluaran)",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/04-percakapan-bencana-alam/bencana-alam-twitter.ipynb"
+   }
+  ]
+ },
+ {
+  "id": "mbg-prioritas-wilayah",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "05-prioritas-wilayah-mbg",
+  "title": "Siapa yang Terlewat Makan Bergizi Gratis? Memetakan Prioritas 3 Kelompok Kabupaten/Kota",
+  "subtitle": "Data Mining · tugas kelompok: integrasi data lima sumber, clustering, dan evaluasi kapasitas layanan",
+  "period": "Mei–Jun 2026",
+  "lang": "Python",
+  "tags": [
+   "Clustering",
+   "K-Means",
+   "Hierarchical",
+   "PCA",
+   "Data wrangling",
+   "Peta"
+  ],
+  "metrics": [
+   [
+    "Kelompok wilayah",
+    "3"
+   ],
+   [
+    "Wilayah tanpa SPPG",
+    "12 (semua di klaster rentan)"
+   ],
+   [
+    "Metode",
+    "K-Means + Hierarchical"
+   ]
+  ],
+  "masalah": "Program Makan Bergizi Gratis (MBG) menyasar siswa. Wilayah mana yang paling perlu diprioritaskan, dan apakah kapasitas layanan (SPPG) yang sudah beroperasi sejalan dengan kebutuhan?",
+  "data": "Lima sumber digabung per kabupaten/kota: stunting, kemiskinan, indeks pembangunan manusia dan ketahanan pangan, serta jumlah siswa dan sekolah (Dapodik), ditambah data SPPG sebagai evaluasi.",
+  "pendekatan": [
+   "Pembersihan dan standardisasi nama wilayah dari berkas yang formatnya berbeda-beda, lalu integrasi.",
+   "Normalisasi dan reduksi dimensi PCA, K-Means dan hierarchical clustering (pemilihan linkage), dengan silhouette dan Davies-Bouldin.",
+   "Visualisasi PCA dan peta kabupaten/kota; interpretasi profil tiap klaster.",
+   "Evaluasi tambahan: agregasi data SPPG per wilayah dan kategori dukungan, lalu penyusunan prioritas rekomendasi."
+  ],
+  "temuan": [
+   "Terbentuk tiga kelompok: prioritas reguler, beban sasaran MBG besar, dan kerentanan gizi serta sosial tinggi.",
+   "Seluruh 12 wilayah tanpa SPPG berada di klaster kerentanan gizi dan sosial tinggi. Pada K-Means klaster ini punya 62 wilayah dengan 533 SPPG (rata-rata 8,6 per wilayah) dan sekitar 7.499 siswa per SPPG, jauh lebih berat dibanding klaster lain.",
+   "Klaster beban sasaran besar justru punya 17.123 SPPG (K-Means). Artinya terdapat jurang antara kebutuhan dan kapasitas layanan: wilayah paling rentan paling sedikit terlayani."
+  ],
+  "catatan": "Tugas kelompok. Notebook dipublikasikan tanpa keluaran dan tanpa tautan data atau identitas anggota.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/05-prioritas-wilayah-mbg",
+  "files": [
+   {
+    "name": "mbg-clustering-prioritas-wilayah.ipynb",
+    "note": "Notebook final (tanpa keluaran)",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/05-prioritas-wilayah-mbg/mbg-clustering-prioritas-wilayah.ipynb"
+   }
+  ]
+ },
+ {
+  "id": "dashboard-kehutanan",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "06-dashboard-kehutanan-indonesia",
+  "title": "Dari Lima Berkas Berantakan ke Dashboard Hutan Indonesia: ETL Tiga Lapis",
+  "subtitle": "Integrasi Aplikasi Korporasi · tugas kelompok (pipeline ETL Python + dashboard Laravel)",
+  "period": "Okt 2026",
+  "lang": "Python",
+  "tags": [
+   "ETL",
+   "Integrasi data",
+   "Replikasi",
+   "Sinkronisasi",
+   "Laravel",
+   "Postgres"
+  ],
+  "metrics": [
+   [
+    "Sumber data",
+    "5 (BPS, KLHK/SiPongi)"
+   ],
+   [
+    "Arsitektur",
+    "staging → master → replika"
+   ],
+   [
+    "Jenis",
+    "tugas kelompok"
+   ]
+  ],
+  "masalah": "Hutan Indonesia 2018–2025: berapa yang tersisa, dan apa yang menggerusnya? Lima data kehutanan dengan format berbeda harus diintegrasikan lalu ditampilkan.",
+  "data": "Lima data dari BPS dan KLHK/SiPongi dalam format XLS, XLSX, CSV, dan JSON: tutupan lahan, kebakaran hutan dan lahan, produksi kayu bulat, dan deforestasi netto per provinsi.",
+  "pendekatan": [
+   "Extract: membaca file mentah apa adanya ke tabel staging (teks asli).",
+   "Transform + Load: aturan pembersihan T1–T8, normalisasi angka dan kode provinsi BPS, ke tabel master.",
+   "Replication: inkremental berbasis primary key dan checksum MD5 dari schema master ke schema replika.",
+   "Synchronization: satu arah dari file sumber terbaru, hanya selisih yang diterapkan.",
+   "Presentasi: dashboard Laravel (Tailwind, Chart.js) dengan login, dideploy ke Vercel; database Postgres (Supabase)."
+  ],
+  "temuan": [
+   "Bukti tiap teknik EAI ditampilkan langsung di dashboard (log ETL, cek total, kartu replikasi dan sinkronisasi), bukan hanya di laporan.",
+   "Porsi kontribusi masing-masing anggota terdokumentasi di repositori tim."
+  ],
+  "catatan": "Proyek kelompok; kode lengkap ada di repositori tim. Repositori ini hanya memuat ringkasan dan tautan, tanpa menyalin kode rekan.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": {
+   "label": "Repositori tim di GitHub",
+   "url": "https://github.com/Markkkow/Kehutanan-IAK"
+  },
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/06-dashboard-kehutanan-indonesia",
+  "files": []
+ },
+ {
+  "id": "fondasi-ml",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "07-fondasi-machine-learning",
+  "title": "Fondasi Machine Learning: Pohon Keputusan, Regresi Linear, Regresi Logistik, dan Graf",
+  "subtitle": "Algoritma Pemrograman dan Metode Statistika Python · latihan dasar",
+  "period": "Jun–Agu 2025",
+  "lang": "Python",
+  "tags": [
+   "scikit-learn",
+   "Decision tree",
+   "Regresi",
+   "Graf"
+  ],
+  "metrics": [
+   [
+    "Akurasi pohon keputusan (Iris)",
+    "93,3%"
+   ],
+   [
+    "Akurasi regresi logistik",
+    "96,5%"
+   ],
+   [
+    "R² regresi linear",
+    "0,284"
+   ]
+  ],
+  "masalah": "Latihan menerapkan algoritma dasar dari nol sampai evaluasi: klasifikasi, regresi, dan penelusuran graf.",
+  "data": "Iris (klasifikasi bunga), Seoul Bike Sharing (jumlah sepeda disewa), dataset diagnosis (kolom id, diagnosis, dan fitur numerik), dan graf berbobot sederhana.",
+  "pendekatan": [
+   "Pohon keputusan pada Iris dengan pembagian latih-uji dan confusion matrix.",
+   "Regresi linear pada Seoul Bike dengan MAE, MAPE, dan R².",
+   "Regresi logistik dengan confusion matrix dan akurasi.",
+   "Graf: semua jalur, jalur terpendek, dan graf berbobot."
+  ],
+  "temuan": [
+   "Pohon keputusan pada Iris: akurasi 93,3%. Regresi logistik pada data diagnosis: akurasi 96,5% (matriks kebingungan [[70, 1], [3, 40]]).",
+   "Regresi linear Seoul Bike hanya R² 0,284 (MAE 404,8): fitur linear tidak menangkap pola musiman dan jam, sehingga model non-linear atau fitur waktu diperlukan."
+  ],
+  "catatan": "",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/07-fondasi-machine-learning",
+  "files": [
+   {
+    "name": "decision-tree-iris.ipynb",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/07-fondasi-machine-learning/decision-tree-iris.ipynb"
+   },
+   {
+    "name": "regresi-linear-seoul-bike.ipynb",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/07-fondasi-machine-learning/regresi-linear-seoul-bike.ipynb"
+   },
+   {
+    "name": "regresi-logistik-diagnosis.ipynb",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/07-fondasi-machine-learning/regresi-logistik-diagnosis.ipynb"
+   },
+   {
+    "name": "graf-jalur-terpendek.ipynb",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/07-fondasi-machine-learning/graf-jalur-terpendek.ipynb"
+   }
+  ]
+ },
+ {
+  "id": "manova-kemiskinan",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "08-manova-kemiskinan-wilayah",
+  "title": "Apakah Kemiskinan Beda di Jawa dan Sumatera? Two-Way MANOVA pada 120 Kabupaten/Kota",
+  "subtitle": "Analisis Multivariat · tugas kelompok · R",
+  "period": "Sep 2026",
+  "lang": "R",
+  "tags": [
+   "MANOVA",
+   "Normalitas multivariat",
+   "Box's M",
+   "Stratified sampling",
+   "R Markdown"
+  ],
+  "metrics": [
+   [
+    "Populasi",
+    "514 → 273 → 120"
+   ],
+   [
+    "Sel",
+    "Wilayah × Pulau (4 sel × 30)"
+   ],
+   [
+    "Uji",
+    "Pillai's trace"
+   ]
+  ],
+  "masalah": "Apakah jenis wilayah (kabupaten vs kota) dan pulau (Jawa vs Sumatera), serta interaksinya, memengaruhi persentase penduduk miskin, rata-rata lama sekolah, dan tingkat partisipasi angkatan kerja secara simultan?",
+  "data": "Data resmi BPS untuk 514 kabupaten/kota. Setelah penyaringan Jawa dan Sumatera tersisa 273 kabupaten/kota dengan ukuran sel tidak seimbang (34 sampai 120). Sampel akhir n = 120 diambil dengan stratified random sampling, 30 per sel (Kabupaten-Jawa, Kabupaten-Sumatera, Kota-Jawa, Kota-Sumatera), seed ditetapkan agar reproducible.",
+  "pendekatan": [
+   "Penarikan sampel berstrata dari populasi, lengkap dengan tabel proses dari data mentah ke sampel akhir.",
+   "Uji asumsi: normalitas multivariat per sel (chi-square plot, Henze-Zirkler, Mardia, dan Shapiro-Wilk univariat), serta homogenitas matriks kovarians dengan Box's M.",
+   "Two-Way MANOVA (Pillai's trace) dan uji lanjutan ANOVA univariat per variabel dependen."
+  ],
+  "temuan": [
+   "Kesimpulan efek wilayah, pulau, dan interaksi dibaca dari tabel Pillai's trace di akhir dokumen R Markdown; angka lengkap muncul saat dokumen di-knit dengan data BPS."
+  ],
+  "catatan": "Tugas kelompok. Berkas dipublikasikan tanpa data mentah.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/08-manova-kemiskinan-wilayah",
+  "files": [
+   {
+    "name": "analisis_manova.Rmd",
+    "note": "Laporan lengkap (R Markdown)",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/08-manova-kemiskinan-wilayah/analisis_manova.Rmd"
+   }
+  ]
+ },
+ {
+  "id": "hotelling-beras",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "09-hotelling-t2-beras",
+  "title": "Dua Jenis Beras, Satu Vektor Rata-rata: Uji Hotelling T² Cammeo vs Osmancik",
+  "subtitle": "Analisis Multivariat · uji hipotesis vektor mean dua populasi · R",
+  "period": "Sep 2026",
+  "lang": "R",
+  "tags": [
+   "Hotelling T²",
+   "Uji multivariat",
+   "R Markdown",
+   "Visualisasi"
+  ],
+  "metrics": [
+   [
+    "Variabel",
+    "4 karakteristik fisik"
+   ],
+   [
+    "Populasi",
+    "Cammeo vs Osmancik"
+   ],
+   [
+    "Uji",
+    "Hotelling T²"
+   ]
+  ],
+  "masalah": "Apakah dua varietas beras, Cammeo dan Osmancik, memiliki vektor rata-rata karakteristik fisik yang sama?",
+  "data": "Rice (Cammeo and Osmancik) dataset: empat karakteristik fisik per butir, dibagi menjadi dua populasi menurut varietas.",
+  "pendekatan": [
+   "Pemeriksaan struktur data, jumlah per varietas, dan missing value.",
+   "Statistika deskriptif dan boxplot per variabel untuk tiap varietas.",
+   "Uji Hotelling T² untuk perbedaan vektor mean dua populasi multivariat, lengkap dengan hipotesis dan kesimpulan."
+  ],
+  "temuan": [
+   "Hasil uji T² dan interpretasinya ada di bagian akhir dokumen R Markdown; angkanya muncul saat dokumen di-knit dengan datasetnya."
+  ],
+  "catatan": "Tugas kelompok. Dataset tidak disertakan.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/09-hotelling-t2-beras",
+  "files": [
+   {
+    "name": "hotelling_rice.Rmd",
+    "note": "Laporan lengkap (R Markdown)",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/09-hotelling-t2-beras/hotelling_rice.Rmd"
+   }
+  ]
+ },
+ {
+  "id": "evd-risiko-truk-banjir",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "10-risiko-truk-banjir-jalan-rusak",
+  "title": "Truk, Banjir, dan Jalan Rusak: Skor Risiko Kecelakaan per Provinsi",
+  "subtitle": "Eksplorasi dan Visualisasi Data · final project · R",
+  "period": "Des 2025",
+  "lang": "R",
+  "tags": [
+   "tidyverse",
+   "Data cleaning",
+   "Visualisasi",
+   "Skor komposit"
+  ],
+  "metrics": [
+   [
+    "Tahun data",
+    "2022"
+   ],
+   [
+    "Sumber",
+    "5 berkas (truk, kondisi jalan, kecelakaan, kendaraan, banjir)"
+   ],
+   [
+    "Unit",
+    "provinsi"
+   ]
+  ],
+  "masalah": "Apakah provinsi dengan banyak truk dan banjir cenderung punya persentase jalan rusak yang lebih tinggi, dan bagaimana kaitannya dengan kecelakaan dan jenis permukaan jalan?",
+  "data": "Lima berkas per provinsi (jumlah truk, kondisi jalan, kecelakaan, kendaraan bermotor, dan kejadian banjir) beserta jenis permukaan jalan, dengan nama provinsi dan format angka yang tidak seragam.",
+  "pendekatan": [
+   "Pembersihan terstruktur: pemeriksaan tipe data, missing value, koreksi tipe, dan standardisasi nama provinsi.",
+   "Fungsi pembersih angka untuk format desimal dan pemisah ribuan yang tidak konsisten.",
+   "Menggabungkan data (satu kali) dan membuat Skor Risiko = rata-rata z-score jumlah truk dan jumlah banjir (2022).",
+   "Visualisasi skor risiko, jumlah truk, dan jumlah banjir terhadap persentase jalan rusak, lalu perbandingan dengan jenis permukaan jalan."
+  ],
+  "temuan": [
+   "Seluruh pembersihan dan pembentukan skor dapat direproduksi dari berkas R Markdown. Angka korelasi dan grafik muncul saat dokumen dijalankan dengan data aslinya."
+  ],
+  "catatan": "Berkas dipublikasikan tanpa data mentah.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/10-risiko-truk-banjir-jalan-rusak",
+  "files": [
+   {
+    "name": "kecelakaan-vs-jenis-permukaan.Rmd",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/10-risiko-truk-banjir-jalan-rusak/kecelakaan-vs-jenis-permukaan.Rmd"
+   },
+   {
+    "name": "kondisi-jalan.Rmd",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/10-risiko-truk-banjir-jalan-rusak/kondisi-jalan.Rmd"
+   }
+  ]
+ },
+ {
+  "id": "evd-wisatawan",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "11-wisatawan-mancanegara-per-pintu",
+  "title": "Lewat Mana Wisatawan Masuk? Udara, Laut, dan Darat 2021–2022",
+  "subtitle": "Eksplorasi dan Visualisasi Data · final project · R",
+  "period": "Nov 2025",
+  "lang": "R",
+  "tags": [
+   "ggplot2",
+   "readxl",
+   "Data cleaning",
+   "Visualisasi"
+  ],
+  "metrics": [
+   [
+    "Kategori pintu",
+    "Udara, Laut, Darat"
+   ],
+   [
+    "Tahun",
+    "2021 dan 2022"
+   ],
+   [
+    "Frekuensi",
+    "bulanan dan tahunan"
+   ]
+  ],
+  "masalah": "Bagaimana kunjungan wisatawan mancanegara ke Indonesia terbagi menurut pintu masuk (udara, laut, darat), dan bagaimana perbandingannya antara 2021 dan 2022?",
+  "data": "Tabel BPS Jumlah Kunjungan Wisatawan Mancanegara per Bulan menurut Pintu Masuk, dengan metadata di baris atas yang harus dilewati.",
+  "pendekatan": [
+   "Fungsi pembersih yang membaca tiap lembar, melewati metadata, menormalkan kolom, dan menyaring tiga kategori pintu.",
+   "Menggabungkan dua tahun dan membuat grafik batang tahunan serta grafik asosiasi bulanan."
+  ],
+  "temuan": [
+   "Grafik hasil muncul saat dokumen dijalankan dengan tabel BPS aslinya; tidak ada angka yang dikutip di sini."
+  ],
+  "catatan": "Berkas dipublikasikan tanpa data mentah.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/11-wisatawan-mancanegara-per-pintu",
+  "files": [
+   {
+    "name": "wisatawan-bulanan.Rmd",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/11-wisatawan-mancanegara-per-pintu/wisatawan-bulanan.Rmd"
+   },
+   {
+    "name": "wisatawan-tahunan.Rmd",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/11-wisatawan-mancanegara-per-pintu/wisatawan-tahunan.Rmd"
+   }
+  ]
+ },
+ {
+  "id": "shiny-dashboard",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "12-dashboard-shiny-unggah-csv",
+  "title": "Dashboard Shiny: Unggah CSV, Langsung Lihat Datanya",
+  "subtitle": "Eksplorasi dan Visualisasi Data · praktikum kelompok · R",
+  "period": "Nov 2025",
+  "lang": "R",
+  "tags": [
+   "Shiny",
+   "shinydashboard",
+   "plotly",
+   "Aplikasi interaktif"
+  ],
+  "metrics": [
+   [
+    "Halaman",
+    "Data, Visualisasi, Interpretasi"
+   ],
+   [
+    "Plot",
+    "scatter interaktif"
+   ],
+   [
+    "Input",
+    "CSV apa saja"
+   ]
+  ],
+  "masalah": "Membuat dasbor interaktif sederhana yang menerima dataset CSV apa pun, menampilkan ringkasan statistik, dan membiarkan pengguna memilih dua variabel untuk dipetakan.",
+  "data": "CSV apa pun yang diunggah pengguna.",
+  "pendekatan": [
+   "shinydashboard dengan tiga halaman: unggah data, visualisasi, dan interpretasi otomatis.",
+   "Pilihan variabel X dan Y diisi dinamis dari kolom file yang diunggah, lalu scatter plot interaktif dengan plotly."
+  ],
+  "temuan": [
+   "Aplikasi bekerja untuk dataset mana pun tanpa perubahan kode karena pilihan variabel dibentuk dari data yang diunggah."
+  ],
+  "catatan": "Praktikum kelompok; identitas anggota dihapus dari judul dasbor.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/12-dashboard-shiny-unggah-csv",
+  "files": [
+   {
+    "name": "dashboard-shiny.Rmd",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/12-dashboard-shiny-unggah-csv/dashboard-shiny.Rmd"
+   }
+  ]
+ },
+ {
+  "id": "spasial-gwr-mle",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "13-statistika-spasial-gwr-dan-mle",
+  "title": "Statistika Spasial: GWR/MGWR Jawa Timur dan Estimasi MLE Generalized Poisson",
+  "subtitle": "Analisis Data Spasial · praktikum dan latihan UAS · R",
+  "period": "Mei–Jun 2026",
+  "lang": "R",
+  "tags": [
+   "GWR",
+   "MGWR",
+   "GWmodel",
+   "sf",
+   "MLE",
+   "Jackknife"
+  ],
+  "metrics": [
+   [
+    "Wilayah",
+    "38 kabupaten/kota Jawa Timur"
+   ],
+   [
+    "Paket",
+    "GWmodel, spgwr, sf"
+   ],
+   [
+    "Estimasi",
+    "MLE (BHHH)"
+   ]
+  ],
+  "masalah": "Bagaimana hubungan antarvariabel berubah secara spasial (GWR dan MGWR), dan bagaimana mengestimasi parameter model hitung secara manual dengan maksimum likelihood?",
+  "data": "Peta Jawa Timur (38 kabupaten/kota) digabung dengan data praktikum. Latihan UAS memakai data simulasi dan data soal.",
+  "pendekatan": [
+   "GWR: menggabungkan data dengan peta, membuat titik representatif, memilih bandwidth, dan menguji asumsi (lmtest, car, olsrr).",
+   "MGWR: bandwidth berbeda untuk tiap variabel.",
+   "Latihan UAS: estimator jackknife, serta fungsi log-likelihood Generalized Poisson yang dioptimasi dengan metode BHHH (maxLik) beserta uji signifikansi parameter."
+  ],
+  "temuan": [
+   "Dokumen ini adalah syntax latihan; hasil angka bergantung pada data praktikum yang tidak disertakan."
+  ],
+  "catatan": "Syntax praktikum GWR/MGWR (M9 dan M11) berasal dari materi dosen, jadi tidak disertakan; hanya latihan UAS saya yang dipublikasikan.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/13-statistika-spasial-gwr-dan-mle",
+  "files": [
+   {
+    "name": "latihan-uas-jackknife-mle.Rmd",
+    "note": "Latihan UAS: jackknife dan MLE Generalized Poisson",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/13-statistika-spasial-gwr-dan-mle/latihan-uas-jackknife-mle.Rmd"
+   }
+  ]
+ },
+ {
+  "id": "audit-data-kebahagiaan",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "14-audit-data-kebahagiaan-pengangguran",
+  "title": "Audit Data Sebelum Analisis: Kebahagiaan Negara vs Pengangguran",
+  "subtitle": "Data Mining I · integrasi dan pembersihan data · R",
+  "period": "Feb 2026",
+  "lang": "R",
+  "tags": [
+   "Data audit",
+   "Imputasi MICE",
+   "dplyr",
+   "tidyr"
+  ],
+  "metrics": [
+   [
+    "Sumber",
+    "World Happiness Report + World Bank"
+   ],
+   [
+    "Imputasi",
+    "MICE (pmm, m = 5)"
+   ],
+   [
+    "Outlier",
+    "aturan IQR"
+   ]
+  ],
+  "masalah": "Sebelum menghubungkan tingkat kebahagiaan dan pengangguran antarnegara, data dari dua sumber yang formatnya berbeda harus diaudit dan diintegrasikan.",
+  "data": "World Happiness Report (CSV berformat desimal Eropa) dan data pengangguran World Bank (XLS dengan 3 baris metadata di atas header).",
+  "pendekatan": [
+   "Audit: struktur dan inkonsistensi format, missing value, duplikasi, dan deteksi outlier dengan IQR secara otomatis untuk semua kolom numerik.",
+   "Cleaning: standardisasi tipe data, mengubah bentuk data World Bank dari lebar ke panjang, imputasi median per negara untuk pengangguran, dan imputasi MICE untuk data kebahagiaan."
+  ],
+  "temuan": [
+   "Pembelajaran utamanya soal pembacaan data: argumen dec = \",\" dan skip = 3 menyelamatkan pembacaan yang tadinya salah tipe, dan imputasi dipilih sesuai pola data hilang masing-masing sumber."
+  ],
+  "catatan": "Berkas dipublikasikan tanpa data mentah dan tanpa path lokal.",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/14-audit-data-kebahagiaan-pengangguran",
+  "files": [
+   {
+    "name": "audit-data-integrasi.Rmd",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/14-audit-data-kebahagiaan-pengangguran/audit-data-integrasi.Rmd"
+   }
+  ]
+ },
+ {
+  "id": "statistika-dasar-r",
+  "repo": "kuliah",
+  "repo_name": "data-science-kuliah",
+  "folder": "15-statistika-dasar-di-r",
+  "title": "Dasar-dasar Statistika di R: Dari Regresi Logistik sampai Distribusi Nilai Ekstrem",
+  "subtitle": "Metode Statistika, Komputasi Statistik, dan EVD · latihan mingguan · R",
+  "period": "Jun–Okt 2025",
+  "lang": "R",
+  "tags": [
+   "R",
+   "Regresi logistik",
+   "Distribusi nilai ekstrem",
+   "Uji hipotesis"
+  ],
+  "metrics": [
+   [
+    "Isi",
+    "latihan mingguan"
+   ],
+   [
+    "Topik",
+    "regresi logistik, EVD, uji"
+   ],
+   [
+    "Bahasa",
+    "R"
+   ]
+  ],
+  "masalah": "Kumpulan latihan mingguan untuk menguasai alat dasar statistika dan komputasi di R.",
+  "data": "Data kecil dari praktikum (mis. data katarak untuk regresi logistik, data tinggi dan umur).",
+  "pendekatan": [
+   "Regresi logistik dan uji hipotesis dasar.",
+   "Praktikum distribusi nilai ekstrem (EVD) dan latihan komputasi statistik."
+  ],
+  "temuan": [
+   "Berkas ini bersifat latihan; tidak ada kesimpulan penelitian yang diklaim."
+  ],
+  "catatan": "",
+  "kode": "tersedia",
+  "status": "selesai",
+  "peringkat": null,
+  "link": null,
+  "url": "https://github.com/Ezra696969/data-science-kuliah/tree/main/15-statistika-dasar-di-r",
+  "files": [
+   {
+    "name": "regresi-logistik-katarak.R",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/15-statistika-dasar-di-r/regresi-logistik-katarak.R"
+   },
+   {
+    "name": "evd-praktikum-m5.R",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/15-statistika-dasar-di-r/evd-praktikum-m5.R"
+   },
+   {
+    "name": "evd-praktikum-3.R",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/15-statistika-dasar-di-r/evd-praktikum-3.R"
+   },
+   {
+    "name": "tinggi-umur.R",
+    "note": "",
+    "url": "https://github.com/Ezra696969/data-science-kuliah/blob/main/15-statistika-dasar-di-r/tinggi-umur.R"
+   }
+  ]
+ }
+]
