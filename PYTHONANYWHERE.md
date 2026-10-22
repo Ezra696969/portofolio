@@ -1,7 +1,8 @@
 # Deploy ke PythonAnywhere (akun gratis, tanpa kartu)
 
-Yang hidup di sini: portofolio, Warung, Barbershop, Dapur Lestari, Stokku.
-**StockLab tidak aktif** (disk gratis 512 MiB dan akses internet keluar dibatasi): panelnya otomatis menampilkan cuplikan dan tautan GitHub. Mahjong tetap redirect ke situsnya sendiri.
+Yang hidup di sini: portofolio, Warung, Barbershop, Dapur Lestari, Stokku, **dan StockLab**. Mahjong tetap redirect ke situsnya sendiri.
+
+StockLab bisa jalan di akun gratis karena PythonAnywhere sudah memasang numpy, pandas, scipy, scikit-learn, plotly, dan yfinance di Python sistemnya; virtualenv cukup diizinkan memakainya (`--system-site-packages`) dan hanya menambah `pyarrow`. Teruji: backtest BBCA ±27 detik, angka sama dengan di laptop. Ambil data simbol lain (selain 5 simbol bawaan) membutuhkan akses Yahoo Finance dari server; itu belum saya uji.
 
 ## 1. Akun
 Daftar akun **Beginner (gratis)** di pythonanywhere.com. Nama pengguna menjadi alamat situs: `https://NAMA.pythonanywhere.com`.
@@ -9,10 +10,10 @@ Daftar akun **Beginner (gratis)** di pythonanywhere.com. Nama pengguna menjadi a
 ## 2. Ambil kode dan pasang Flask (tab Consoles → Bash)
 ```bash
 git clone https://github.com/Ezra696969/portofolio.git
-mkvirtualenv --python=python3.11 portofolio-env
+mkvirtualenv --system-site-packages --python=python3.11 portofolio-env
 pip install -r portofolio/requirements-pythonanywhere.txt
 ```
-(Gunakan versi Python yang tersedia di akun Anda bila 3.11 tidak ada, dan samakan di langkah 3.)
+(Gunakan versi Python yang tersedia di akun Anda bila 3.11 tidak ada, dan samakan di langkah 3. Bila virtualenv sudah dibuat tanpa `--system-site-packages`, ubah `include-system-site-packages = true` di `~/.virtualenvs/portofolio-env/pyvenv.cfg`.)
 
 ## 3. Web app (tab Web → Add a new web app)
 - Pilih **Manual configuration**, lalu versi Python yang sama dengan virtualenv.
