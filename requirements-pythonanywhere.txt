@@ -1,1 +1,4 @@
 Flask>=3.0
+# Untuk StockLab: numpy/pandas/scipy/scikit-learn/plotly/yfinance sudah terpasang di sistem PythonAnywhere
+# (virtualenv memakai include-system-site-packages = true). Hanya pyarrow yang perlu ditambah.
+pyarrow
