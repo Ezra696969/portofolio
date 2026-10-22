@@ -14,7 +14,10 @@ services:
         value: "1"
       - key: SECRET_KEY
         generateValue: true
-      - key: DEMO_ADMIN_PASSWORD   # sandi khusus demo (akan terlihat publik di halaman login demo)
-        sync: false
+      # Sandi demo sengaja publik: memang ditampilkan di halaman login demo. Jangan pakai sandi asli.
+      - key: DEMO_ADMIN_PASSWORD
+        value: demo-admin-2026
       - key: DEMO_KASIR_PASSWORD
-        sync: false
+        value: demo-kasir-2026
+      - key: STOCKLAB_MAX_JOBS   # paket gratis hanya 0,1 CPU: satu backtest berat pada satu waktu
+        value: "1"
