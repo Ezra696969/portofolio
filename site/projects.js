@@ -51,7 +51,7 @@ const PROJECTS = [
     title: "Mahjong Online", sub: "Game multiplayer 4 pemain",
     desc: "Main bareng teman lewat browser, kursi kosong diisi bot. Klik untuk membuka game.",
     tags: ["Node.js", "WebSocket"], img: "img/mahjong.png",
-    url: "", // mis. "https://USERNAME-mahjong-online.hf.space" atau Render
+    url: "https://ro47kz3rtroi-production-vgphc20e.us-central1.suga.run/", // situs game (redirect)
     repo: "https://github.com/Ezra696969/mahjong-online"
   }
 ];
