@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scientific Research & Technical Whitepapers — Greg Ezra</title>
+<meta name="description" content="Riset ilmiah, pembuktian matematis, dan rekayasa data machine learning untuk masalah dunia nyata: Finansial IDX, Pengadaan Publik LKPP, dan Penginderaan Jauh Satelit Sentinel-2.">
+<!-- KaTeX for math formulas -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<link rel="stylesheet" href="research.css">
+</head>
+<body>
+<header class="top">
+  <div class="top-wrap">
+    <p class="eyebrow">Portofolio · Laboratorium Riset Ilmiah</p>
+    <h1>Scientific Research & Technical Whitepapers</h1>
+    <p class="lead">Kompilasi penelitian independen dan pembuktian matematis untuk memecahkan masalah riil: <b>ekstraksi deterministik laporan keuangan emiten IDX</b>, <b>deteksi forensik kartel pengadaan LKPP</b>, dan <b>segmentasi deforestasi tropis berbasis satelit Sentinel-2</b>. Semua data berasal dari sumber resmi yang dapat diverifikasi secara publik.</p>
+    <div class="stats" id="stats">
+      <div class="stat"><b>3</b><span>Whitepaper Lengkap</span></div>
+      <div class="stat"><b>100%</b><span>Sumber Otoritatif Resmi</span></div>
+      <div class="stat"><b>0%</b><span>Halusinasi (Closed-Loop)</span></div>
+      <div class="stat"><b>PyTorch & SciPy</b><span>Pipeline Teruji</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="filters" id="filters" role="group" aria-label="Filter kategori riset"></div>
+  <section class="grid" id="grid" aria-live="polite"></section>
+  <p class="foot">Semua riset menyertakan modul kode sumber Python yang dapat direproduksi (*fully reproducible*) dengan *unit tests* terverifikasi.</p>
+</main>
+
+<!-- Full Paper Academic Reader -->
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="pTitle" hidden>
+  <div class="sbar">
+    <button class="back" id="sBack">← Kembali ke Daftar Riset</button>
+    <span class="sp"></span>
+    <span class="badge" id="sBadge">Verified Paper</span>
+  </div>
+  <article class="paper-view" id="paperView"></article>
+</div>
+
+<script src="research.js"></script>
+</body>
+</html>

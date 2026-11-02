@@ -37,6 +37,15 @@ const PROJECTS = [
     repo: ""
   },
   {
+    id: "research", cat: "research", type: "embed",
+    title: "Scientific Research", sub: "Technical Whitepapers & Data Forensics",
+    desc: "Tiga riset domain nyata dengan sumber resmi: Ekstraksi Laporan Keuangan IDX, Deteksi Kartel Pengadaan LKPP (Benford & Graf), dan Pemantauan Deforestasi Satelit Sentinel-2 (U-Net).",
+    tags: ["Whitepaper", "Financial AI", "Forensic Data", "Remote Sensing"], img: "img/research.png",
+    url: "research/index.html",
+    hint: "Klik kartu mana pun di dalam untuk membaca naskah paper lengkap, formulasi matematis, dan modul kode Python.",
+    repo: ""
+  },
+  {
     id: "ds", cat: "data", type: "embed",
     title: "Data Science Project", sub: "Studi kasus lomba dan kuliah (Python & R)",
     desc: "Tujuh lomba dan lima belas proyek kuliah, dituturkan sebagai riset: masalah, data, pendekatan, temuan, dan peringkat.",
@@ -63,4 +72,4 @@ const PROJECTS = [
     repo: "https://github.com/Ezra696969/mahjong-online"
   }
 ];
-const CATS = { all: "Semua", web: "Website", app: "Aplikasi", data: "Data & Saham", game: "Game" };
+const CATS = { all: "Semua", research: "Research", data: "Data & Saham", app: "Aplikasi", web: "Website", game: "Game" };
