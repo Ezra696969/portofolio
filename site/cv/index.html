@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Curriculum Vitae — Greg Ezra Sebastian Sitorus</title>
+<meta name="description" content="Curriculum Vitae ATS-Friendly Greg Ezra Sebastian Sitorus — Data Scientist & Machine Learning Engineer.">
+<style>
+  :root {
+    --ink: #0f172a;
+    --sub: #334155;
+    --muted: #475569;
+    --line: #cbd5e1;
+    --bg: #f1f5f9;
+    --paper: #ffffff;
+    --accent: #1e3a8a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Calibri", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.45;
+    font-size: 10.5pt;
+  }
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 10px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+  .toolbar .left, .toolbar .right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    appearance: none;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: #f8fafc;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .btn:hover { background: #334155; border-color: #475569; }
+  .btn.active { background: #2563eb; border-color: #3b82f6; color: #fff; }
+  .btn.primary { background: #059669; border-color: #10b981; }
+  .btn.primary:hover { background: #047857; }
+
+  .page {
+    max-width: 210mm;
+    margin: 24px auto;
+    background: var(--paper);
+    padding: 14mm 16mm;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    border-radius: 4px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    margin: 0 0 2px 0;
+    font-size: 20pt;
+    letter-spacing: 0.4px;
+    color: var(--ink);
+  }
+  header .role {
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: var(--sub);
+    margin-bottom: 4px;
+  }
+  header .contact {
+    font-size: 9.5pt;
+    color: var(--muted);
+    margin: 2px 0;
+  }
+  header .contact a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  header .contact a:hover { text-decoration: underline; }
+
+  section { margin-top: 10px; }
+  h2 {
+    font-size: 10.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 2px;
+    margin: 10px 0 6px 0;
+  }
+  p.summary {
+    margin: 4px 0 6px 0;
+    text-align: justify;
+    font-size: 9.8pt;
+  }
+  .entry { margin-bottom: 7px; }
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .entry-title {
+    font-weight: 700;
+    font-size: 10pt;
+    color: var(--ink);
+  }
+  .entry-sub {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--sub);
+    font-size: 9.5pt;
+  }
+  .entry-date {
+    font-weight: 700;
+    font-size: 9.5pt;
+    color: var(--sub);
+    white-space: nowrap;
+  }
+  ul {
+    margin: 2px 0 5px 18px;
+    padding: 0;
+  }
+  li {
+    margin-bottom: 2.5px;
+    font-size: 9.6pt;
+    text-align: justify;
+  }
+  .lang-en { display: none; }
+  body[data-lang="en"] .lang-id { display: none; }
+  body[data-lang="en"] .lang-en { display: block; }
+
+  @media print {
+    body { background: #fff; }
+    .toolbar { display: none !important; }
+    .page {
+      margin: 0;
+      padding: 0;
+      box-shadow: none;
+      max-width: 100%;
+    }
+    @page {
+      size: A4;
+      margin: 12mm 14mm;
+    }
+  }
+</style>
+</head>
+<body data-lang="id">
+
+<div class="toolbar">
+  <div class="left">
+    <a class="btn" href="../index.html">← Portofolio</a>
+    <button class="btn active" id="btn-id" onclick="setLang('id')">🇮🇩 Bahasa Indonesia</button>
+    <button class="btn" id="btn-en" onclick="setLang('en')">🇬🇧 English Version</button>
+  </div>
+  <div class="right">
+    <a class="btn primary" id="dl-pdf" href="CV_Greg_Ezra_ID.pdf" download>⬇ Unduh PDF (ID)</a>
+    <a class="btn" id="dl-docx" href="CV_Greg_Ezra_ID.docx" download>⬇ Unduh Word (.docx)</a>
+    <button class="btn" onclick="window.print()">🖨 Cetak / Save PDF</button>
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- VERSI BAHASA INDONESIA                                                  -->
+<!-- ======================================================================= -->
+<main class="page lang-id">
+  <header>
+    <h1>GREG EZRA SEBASTIAN SITORUS</h1>
+    <div class="role">Data Scientist &amp; Machine Learning Engineer</div>
+    <div class="contact">
+      Sidoarjo / Surabaya, Jawa Timur &nbsp;|&nbsp; +62 819-2612-233 &nbsp;|&nbsp;
+      <a href="mailto:gregezra69@gmail.com">gregezra69@gmail.com</a> &nbsp;|&nbsp;
+      <a href="mailto:greg.ezra.sebastian-2024@ftmm.unair.ac.id">greg.ezra.sebastian-2024@ftmm.unair.ac.id</a>
+    </div>
+    <div class="contact">
+      Portofolio: <a href="https://gregy.pythonanywhere.com" target="_blank" rel="noopener">gregy.pythonanywhere.com</a> &nbsp;|&nbsp;
+      GitHub: <a href="https://github.com/Ezra696969" target="_blank" rel="noopener">github.com/Ezra696969</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Ringkasan Profesional</h2>
+    <p class="summary">
+      Mahasiswa S1 Teknologi Sains Data Universitas Airlangga dengan spesialisasi pada Machine Learning, Financial AI, Forensic Data Science, dan Rekayasa Pipeline Data. Berpengalaman membangun sistem intelijen laporan keuangan terotomatisasi (akurasi rekonsiliasi PSAK 100%), sistem deteksi anomali &amp; kecurangan berbasis graf dan Hukum Benford, serta platform backtesting kuantitatif dan aplikasi web full-stack (Python, Flask, R, SQL). Finalis kompetisi nasional Data Analysis Competition IFEST 2026 dengan rekam jejak teruji pada 7 kompetisi sains data nasional (NLP, Computer Vision, Time-Series Forecasting).
+    </p>
+  </section>
+
+  <section>
+    <h2>Pendidikan</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Universitas Airlangga (UNAIR)</span> <span class="entry-sub">— Fakultas Teknologi Maju dan Multidisiplin (FTMM), Surabaya</span></div>
+        <div class="entry-date">Agu 2024 – Sekarang</div>
+      </div>
+      <ul>
+        <li><b>S1 Teknologi Sains Data</b> (NIM: 164241077) &nbsp;|&nbsp; <b>IPK: 3,20 / 4,00</b></li>
+        <li><b>Mata Kuliah Relevan:</b> Data Mining I &amp; II, Analisis Multivariat, Pengantar Basis Data, Komputasi Statistika, Analisis Data Spasial, Eksplorasi &amp; Visualisasi Data, Pengantar Kecerdasan Buatan, Statistika Matematika, Riset Operasi.</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">SMA Katolik Santo Carolus Surabaya</span> <span class="entry-sub">— Pendidikan Menengah Atas, Surabaya</span></div>
+        <div class="entry-date">2021 – 2024</div>
+      </div>
+      <ul>
+        <li><b>Riwayat Pendidikan Terpadu Yayasan Tarakanita Santo Carolus Surabaya:</b> SMA Santo Carolus (2021–2024), SMP Santo Carolus (2018–2021), SD Santo Carolus (2012–2018) — lulus tepat waktu di seluruh jenjang.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Riset Ilmiah &amp; Technical Whitepapers (Independen)</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Automated Financial Statement Intelligence for IDX (Reconciled-FinExtract)</span> <span class="entry-sub">— Financial NLP, Document AI, PSAK 1</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>Arsitektur Rekonsiliasi Akuntansi Deterministik:</b> Merancang pipeline ekstraksi tabel laporan keuangan PDF emiten Bursa Efek Indonesia (BEI) yang dipadukan dengan <i>Double-Entry Accounting Reconciliation Engine</i> berbasis PSAK 1 / IFRS (Total Aset = Liabilitas + Ekuitas; Rekonsiliasi Arus Kas).</li>
+        <li><b>Eliminasi Halusinasi Numerik AI:</b> Membangun modul normalisasi lokalisasi angka Indonesia, kurung negatif akuntansi, dan pendeteksi skala otomatis (ribuan/jutaan/miliar Rupiah), mencapai <b>Cell Exact Match 100%</b> dan <b>0% halusinasi numerik</b> pada benchmark laporan audited (BBCA, ICBP, TLKM).</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Algorithmic Detection of Bid Rigging in Public Procurement (LKPP / LPSE)</span> <span class="entry-sub">— Forensic Data Science &amp; Graph Analytics</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>Audit Forensik &amp; Deteksi Kartel:</b> Mengembangkan sistem peringatan dini (<i>Early Warning System</i>) persekongkolan tender pengadaan publik menggunakan uji distribusi digit <b>Hukum Benford</b> (Chi-Square &amp; Mean Absolute Deviation) untuk mendeteksi manipulasi angka nilai kontrak.</li>
+        <li><b>Pemodelan Graf Bipartit &amp; Skor Risiko:</b> Memodelkan jaringan penawar (<i>co-bidding network</i>), entropi informasi Shannon, dan <i>Corruption Risk Index (CRI)</i> mengacu pada standar indikator red-flags World Bank dan OECD.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Tropical Deforestation &amp; Wildfire Damage Assessment via Sentinel-2 &amp; U-Net</span> <span class="entry-sub">— Geospatial AI &amp; Remote Sensing</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>Pemetaan Spasial Resolusi Tinggi (10m):</b> Mengombinasikan komputasi indeks spektral biofisik multi-temporal satelit ESA Copernicus Sentinel-2 (NDVI, NBR, dNBR) dengan jaringan segmentasi konvolusi dalam PyTorch U-Net (6-channel fusion), menghasilkan <b>IoU 0,862</b> dan <b>Dice F1-Score 0,925</b>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Proyek Perangkat Lunak, Kuantitatif &amp; Data Engineering</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">StockLab &amp; EquityLab — Ekosistem Analisis Kuantitatif &amp; Fundamental Saham BEI</span> <span class="entry-sub">— Python, Flask, Streamlit, Scikit-learn, Plotly</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>StockLab (Walk-Forward ML Backtesting):</b> Membangun laboratorium backtesting model machine learning saham IDX dengan validasi walk-forward, kalkulasi biaya transaksi, dan uji ketahanan anti-overfitting. Menulis ulang arsitektur dari Streamlit ke Flask + JavaScript agar berjalan dalam satu server terpadu.</li>
+        <li><b>EquityLab (Fundamental Screener):</b> Mengembangkan engine kurasi laporan keuangan, dekumulasi kuartal Q4 otomatis (FY &minus; Q1..Q3), kalkulasi rasio keuangan sadar-sektor (ROE, ROA, DER, P/E, P/B, pertumbuhan QoQ/YoY anti-lubang-Q4), serta skor komposit persentil tervalidasi dengan <b>33 unit test otomatis</b>.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Pipeline ETL Tiga Lapis &amp; Dashboard Kehutanan Indonesia</span> <span class="entry-sub">— Python, PostgreSQL (Supabase), Laravel, Tailwind CSS</span></div>
+        <div class="entry-date">Okt 2026</div>
+      </div>
+      <ul>
+        <li><b>Enterprise Application Integration (EAI):</b> Membangun pipeline Extract-Transform-Load (staging &rarr; master &rarr; replika) yang mengintegrasikan 5 sumber data heterogen (BPS &amp; KLHK SiPongi dalam format XLS, XLSX, CSV, JSON) dengan replikasi inkremental berbasis checksum MD5 dan sinkronisasi otomatis ke dashboard web.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Stokku POS, Dapur Lestari &amp; Portal Portofolio Terpadu</span> <span class="entry-sub">— Python, Flask, SQLite, Node.js, WebSocket, HTML/CSS/JS</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>Aplikasi Bisnis &amp; Sistem Informasi:</b> Merancang aplikasi Point-of-Sale (POS) &amp; inventori dua peran (Kasir &amp; Admin) dengan pengurangan stok otomatis dan laporan transaksi (Stokku), sistem manajemen pesanan katering dengan ekspor CSV (Dapur Lestari), serta game multiplayer real-time (Node.js/WebSocket) yang diintegrasikan dalam satu arsitektur server WSGI dengan sanitasi data otomatis (DS-BUILD).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Kompetisi Sains Data &amp; Pencapaian</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Finalis — Data Analysis Competition IFEST 2026</span> <span class="entry-sub">— Universitas Padjadjaran (UNPAD) — Tingkat Nasional</span></div>
+        <div class="entry-date">Sep 2026</div>
+      </div>
+      <ul>
+        <li><b>Babak Penyisihan (Macro-F1 Publik: 0,94835):</b> Merancang 233 fitur rekayasa teks dari nol (TF-IDF, LSA, BM25, Word2Vec/FastText, statistik entitas &amp; negasi) dan ensemble 12 model dengan GroupKFold anti-leakage untuk mendeteksi <i>textual entailment</i> judul vs isi berita.</li>
+        <li><b>Babak Final (CV Average Precision: 0,71259):</b> Memperbaiki 79.756 nilai hilang &amp; 8.032 nol palsu menggunakan prinsip konservasi neraca air/luas, lalu memodelkan prediksi <i>water stress</i> bulanan per sub-DAS (HUC12) dengan blend LightGBM, XGBoost, Quantile GBDT, dan Transformer dari nol + analisis TreeSHAP.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Rekam Jejak Kompetisi Data Mining &amp; Machine Learning Nasional</span> <span class="entry-sub">— 7 Studi Kasus Kompetisi Terdokumentasi</span></div>
+        <div class="entry-date">2025 – 2026</div>
+      </div>
+      <ul>
+        <li><b>ACTION 2026 (NLP Multi-Label, Skor Publik: 0,93360 Macro-F1) &amp; Peserta ACTION 2025 (UNESA):</b> Membangun dekoder sandi/homoglif/leetspeak dan fine-tuning ensemble IndoBERT &amp; IndoBERTweet dengan injeksi konteks thread komentar untuk memetakan 9 pilar layanan publik dari 58.000 komentar.</li>
+        <li><b>JOINTS x INSPIRE UGM 2026 (Time-Series Forecasting, LB MASE: 0,36493):</b> Mengembangkan <i>Distributional Hurdle Model</i> LightGBM dengan augmentasi umur tayang (500.000 baris latih) dan kalibrasi efek kalender (Ramadan/Lebaran/Nyepi) untuk meramal penjualan tiket bioskop D4–D10.</li>
+        <li><b>Computer Vision &amp; Tabular (DATASCAPE, Satria Data, FIND IT, GAMMA FEST 2026):</b> Mencapai Macro-F1 0,89063 dengan pembersihan label noise &amp; blend ConvNeXt + CLIP ViT-L/14 (DATASCAPE); Macro-F1 0,9706 dengan ensemble 12 model 3-backbone &times; 4-fold (BDC Satria Data); Face Anti-Spoofing 6 kelas dengan Focal Loss &amp; SWA (FIND IT); serta evaluasi otomatis 296 eksperimen CatBoost Poisson &amp; fitur causal Elo (GAMMA FEST).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Pengalaman Organisasi &amp; Kepanitiaan</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Pengenalan Kehidupan Kampus bagi Mahasiswa Baru (PKKMB / PD) FTMM UNAIR 2026</span> <span class="entry-sub">— Staf Divisi Acara</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li>Merancang susunan acara (rundown), mengatur alur kegiatan orientasi fakultas, serta berkoordinasi lintas divisi untuk memastikan kelancaran pelaksanaan kegiatan bagi ratusan mahasiswa baru FTMM.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Philanthropy — Departemen Sosial Pengabdian Masyarakat (Sigma) HIMATESDA UNAIR</span> <span class="entry-sub">— Panitia Pelaksana (Konsumsi, Operasional Lapangan &amp; Perlengkapan)</span></div>
+        <div class="entry-date">Nov 2025</div>
+      </div>
+      <ul>
+        <li>Mengelola logistik konsumsi sekaligus mendukung Koordinator Lapangan (Korlap) dan Divisi Perlengkapan (Perkap) dalam pengamanan alur acara dan kesiapan teknis kegiatan pengabdian masyarakat di Manukan Kulon, Surabaya (Sertifikat No: 5486/B/UN3.FTMM/KM.06.02/2025).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Keahlian Teknis &amp; Sertifikasi</h2>
+    <ul>
+      <li><b>Bahasa Pemrograman &amp; Database:</b> Python (Mahir), R (Mahir), SQL (PostgreSQL, SQLite), JavaScript (ES6+), HTML5/CSS3, PHP (Laravel).</li>
+      <li><b>Machine Learning &amp; AI:</b> Scikit-learn, LightGBM, XGBoost, CatBoost, PyTorch, timm, HuggingFace Transformers (IndoBERT, FinBERT, CLIP, ViT, U-Net), SHAP, Optuna.</li>
+      <li><b>Statistika, Analitik &amp; Rekayasa Data:</b> Time-Series Forecasting, NLP, Computer Vision, Forensic Data Analysis (Benford's Law, Network Graph), Analisis Multivariat (MANOVA, Hotelling T²), Statistika Spasial (GWR/MGWR), Pipeline ETL, Pandas, NumPy, SciPy, Tidyverse, R Shiny, Streamlit, Plotly.</li>
+      <li><b>Sertifikasi &amp; Penghargaan:</b> Finalis Data Analysis Competition IFEST 2026 (FMIPA UNPAD); Peserta Tingkat Nasional Academic Competition of Data Science (ACTION) 2025 (FMIPA UNESA); Sertifikat Kepanitiaan Philanthropy FTMM UNAIR (2025).</li>
+    </ul>
+  </section>
+</main>
+
+<!-- ======================================================================= -->
+<!-- ENGLISH VERSION                                                         -->
+<!-- ======================================================================= -->
+<main class="page lang-en">
+  <header>
+    <h1>GREG EZRA SEBASTIAN SITORUS</h1>
+    <div class="role">Data Scientist &amp; Machine Learning Engineer</div>
+    <div class="contact">
+      Sidoarjo / Surabaya, East Java, Indonesia &nbsp;|&nbsp; +62 819-2612-233 &nbsp;|&nbsp;
+      <a href="mailto:gregezra69@gmail.com">gregezra69@gmail.com</a> &nbsp;|&nbsp;
+      <a href="mailto:greg.ezra.sebastian-2024@ftmm.unair.ac.id">greg.ezra.sebastian-2024@ftmm.unair.ac.id</a>
+    </div>
+    <div class="contact">
+      Portfolio: <a href="https://gregy.pythonanywhere.com" target="_blank" rel="noopener">gregy.pythonanywhere.com</a> &nbsp;|&nbsp;
+      GitHub: <a href="https://github.com/Ezra696969" target="_blank" rel="noopener">github.com/Ezra696969</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Professional Summary</h2>
+    <p class="summary">
+      Data Science Technology undergraduate at Universitas Airlangga specializing in Machine Learning, Financial AI, Forensic Data Science, and End-to-End Data Engineering. Proven track record in building deterministic financial statement extraction engines (100% PSAK/IFRS accounting identity verification), graph-based &amp; Benford's Law fraud detection pipelines, walk-forward quantitative backtesting platforms, and full-stack web applications (Python, Flask, R, SQL). National Finalist at the IFEST 2026 Data Analysis Competition with extensive hands-on experience across 7 national data science competitions (NLP, Computer Vision, Time-Series Forecasting, and Tabular Modeling).
+    </p>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Universitas Airlangga (UNAIR)</span> <span class="entry-sub">— Faculty of Advanced Technology and Multidiscipline (FTMM), Surabaya</span></div>
+        <div class="entry-date">Aug 2024 – Present</div>
+      </div>
+      <ul>
+        <li><b>Bachelor of Data Science Technology</b> (Student ID: 164241077) &nbsp;|&nbsp; <b>GPA: 3.20 / 4.00</b></li>
+        <li><b>Relevant Coursework:</b> Data Mining I &amp; II, Multivariate Analysis, Database Systems, Statistical Computing, Spatial Data Analysis, Exploratory Data Analysis &amp; Visualization, Artificial Intelligence, Mathematical Statistics, Operations Research.</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">SMA Katolik Santo Carolus Surabaya</span> <span class="entry-sub">— High School Diploma, Surabaya</span></div>
+        <div class="entry-date">2021 – 2024</div>
+      </div>
+      <ul>
+        <li><b>Continuous Academic Track at Santo Carolus Surabaya:</b> Senior High School (2021–2024), Junior High School (2018–2021), Elementary School (2012–2018) — completed all levels on schedule.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Scientific Research &amp; Technical Whitepapers</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Automated Financial Statement Intelligence for IDX (Reconciled-FinExtract)</span> <span class="entry-sub">— Financial NLP, Document AI, PSAK 1 / IFRS</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>Deterministic Accounting Reconciliation:</b> Engineered an automated PDF financial statement extraction pipeline for Indonesia Stock Exchange (IDX) issuers integrated with a <i>Double-Entry Accounting Reconciliation Engine</i> enforcing PSAK 1 / IFRS identities (Assets = Liabilities + Equity; Cash Flow closure).</li>
+        <li><b>Zero Numeric Hallucination:</b> Built Indonesian locale numeric normalizers, accounting negative bracket parsers, and automated monetary scale detectors (thousands/millions/billions IDR), achieving <b>100% cell exact match</b> and <b>0% numeric hallucination</b> on audited IDX benchmarks (BBCA, ICBP, TLKM).</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Algorithmic Detection of Bid Rigging in Public Procurement (LKPP / LPSE)</span> <span class="entry-sub">— Forensic Data Science &amp; Graph Analytics</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>Forensic Digit &amp; Anomaly Auditing:</b> Developed an Early Warning System for collusive public procurement tenders combining <b>Benford's Law</b> first-digit tests (Chi-Square &amp; Mean Absolute Deviation) to detect human-fabricated contract values and budget-splitting anomalies.</li>
+        <li><b>Bipartite Graph &amp; Corruption Risk Index (CRI):</b> Modeled vendor-tender co-bidding networks, Shannon winner entropy, and composite red-flag risk scoring aligned with World Bank INT and OECD anti-cartel guidelines.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Tropical Deforestation &amp; Wildfire Damage Assessment via Sentinel-2 &amp; U-Net</span> <span class="entry-sub">— Geospatial AI &amp; Remote Sensing</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>High-Resolution Spatial Segmentation (10m):</b> Combined multi-temporal ESA Copernicus Sentinel-2 biophysical spectral indices (NDVI, NBR, dNBR) with a 6-channel PyTorch U-Net segmentation architecture, achieving <b>0.862 IoU</b> and <b>0.925 Dice F1-Score</b> for automated hectare-level burn scar quantification.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Software, Quantitative &amp; Data Engineering Projects</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">StockLab &amp; EquityLab — Quantitative Backtesting &amp; Fundamental Screening Suite</span> <span class="entry-sub">— Python, Flask, Streamlit, Scikit-learn, Plotly</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>StockLab (Walk-Forward ML Backtester):</b> Built an IDX equity machine learning backtesting platform featuring walk-forward validation, transaction cost modeling, and falsification checks against look-ahead bias. Re-architected the UI from Streamlit to Flask + JavaScript for unified single-server deployment.</li>
+        <li><b>EquityLab (Sector-Aware Fundamental Engine):</b> Developed a financial ratio and percentile screening library featuring automated Q4 discrete quarter derivation (FY &minus; Q1..Q3), gap-safe QoQ/YoY growth computation, outlier flagging, and <b>33 automated pytest unit tests</b>.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Three-Tier Forestry ETL Pipeline &amp; Enterprise Dashboard</span> <span class="entry-sub">— Python, PostgreSQL (Supabase), Laravel, Tailwind CSS</span></div>
+        <div class="entry-date">Oct 2026</div>
+      </div>
+      <ul>
+        <li><b>Enterprise Application Integration (EAI):</b> Architected a staging &rarr; master &rarr; replica ETL pipeline integrating 5 heterogeneous forestry datasets (BPS &amp; KLHK SiPongi in XLS, XLSX, CSV, JSON) with MD5 checksum incremental replication, one-way delta synchronization, and a live Laravel analytics dashboard.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Stokku POS, Dapur Lestari &amp; Unified Portfolio Server</span> <span class="entry-sub">— Python, Flask, SQLite, Node.js, WebSocket, HTML/CSS/JS</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li><b>Full-Stack Business Applications:</b> Built a role-based Point-of-Sale &amp; inventory management system with automated stock deduction (Stokku), a catering order &amp; CSV reporting portal (Dapur Lestari), a 4-player real-time WebSocket game, and an automated PII/secret sanitization pipeline (DS-BUILD).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Data Science Competitions &amp; Achievements</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">National Finalist — Data Analysis Competition IFEST 2026</span> <span class="entry-sub">— Universitas Padjadjaran (UNPAD)</span></div>
+        <div class="entry-date">Sep 2026</div>
+      </div>
+      <ul>
+        <li><b>Preliminary Round (0.94835 Public Macro-F1):</b> Engineered 233 handcrafted NLP features from scratch (TF-IDF, LSA, BM25, Word2Vec/FastText, entity &amp; negation statistics) and a 12-model rank-averaged ensemble with article-grouped cross-validation to detect news headline-body entailment under strict no-pretrained-weights rules.</li>
+        <li><b>Final Round (0.71259 CV Average Precision):</b> Reconstructed 79,756 missing values and 8,032 false zeros using hydrological water/area balance equations, predicting next-month watershed (HUC12) water stress via a blend of LightGBM, XGBoost, Quantile GBDT, and custom Transformer with TreeSHAP interpretability.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">National Data Mining &amp; Machine Learning Competition Track Record</span> <span class="entry-sub">— 7 Documented Competition Case Studies</span></div>
+        <div class="entry-date">2025 – 2026</div>
+      </div>
+      <ul>
+        <li><b>ACTION 2026 (Multi-Label NLP, 0.93360 Public Macro-F1) &amp; ACTION 2025 Participant (UNESA):</b> Built a custom cipher/homoglyph/leetspeak normalizer and fine-tuned 5-fold group-split IndoBERT &amp; IndoBERTweet ensembles with thread-context injection across 58,000 public service comments.</li>
+        <li><b>JOINTS x INSPIRE UGM 2026 (Time-Series Forecasting, 0.36493 Public MASE):</b> Developed a Distributional Hurdle LightGBM model with release-age augmentation (~500k training rows) and holiday decay adjustments (Eid/Ramadan/Nyepi) to forecast D4–D10 cinema ticket sales from D1–D3 history.</li>
+        <li><b>Computer Vision &amp; Tabular Modeling (DATASCAPE, Satria Data, FIND IT, GAMMA FEST 2026):</b> Achieved 0.89063 Macro-F1 via manual/automated label-noise cleaning &amp; ConvNeXt + CLIP ViT-L/14 blending (DATASCAPE); 0.9706 validation Macro-F1 with a 12-model 3-backbone &times; 4-fold ensemble (BDC Satria Data); 6-class Face Anti-Spoofing with Focal Loss &amp; SWA (FIND IT); and evaluated 296 automated grid-search submissions using CatBoost Poisson &amp; causal Elo form features (GAMMA FEST).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Leadership &amp; Organizational Experience</h2>
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Faculty Orientation Committee (PKKMB / PD FTMM) — Universitas Airlangga</span> <span class="entry-sub">— Event Division Staff (Staf Acara)</span></div>
+        <div class="entry-date">2026</div>
+      </div>
+      <ul>
+        <li>Designed event rundowns, managed stage flow and scheduling, and coordinated across divisions to execute faculty-wide orientation programs for incoming FTMM students.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div><span class="entry-title">Philanthropy — Community Service Department (Sigma), HIMATESDA UNAIR</span> <span class="entry-sub">— Organizing Committee (Logistics, Field Operations &amp; Equipment Support)</span></div>
+        <div class="entry-date">Nov 2025</div>
+      </div>
+      <ul>
+        <li>Managed catering logistics while actively supporting Field Coordinators (Korlap) and Equipment (Perkap) teams in on-site crowd flow and technical setup for community service in Manukan Kulon, Surabaya (Certificate No: 5486/B/UN3.FTMM/KM.06.02/2025).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Technical Skills &amp; Certifications</h2>
+    <ul>
+      <li><b>Programming &amp; Databases:</b> Python (Advanced), R (Advanced), SQL (PostgreSQL, SQLite), JavaScript (ES6+), HTML5/CSS3, PHP (Laravel).</li>
+      <li><b>Machine Learning &amp; Deep Learning:</b> Scikit-learn, LightGBM, XGBoost, CatBoost, PyTorch, timm, HuggingFace Transformers (IndoBERT, FinBERT, CLIP, ViT, U-Net), SHAP, Optuna.</li>
+      <li><b>Statistics, Analytics &amp; Data Engineering:</b> Time-Series Forecasting, NLP, Computer Vision, Forensic Data Analysis (Benford's Law, Graph Theory), Multivariate Statistics (MANOVA, Hotelling T²), Spatial Statistics (GWR/MGWR), ETL Pipelines, Pandas, NumPy, SciPy, Tidyverse, R Shiny, Streamlit, Plotly.</li>
+      <li><b>Certifications &amp; Awards:</b> Finalist — Data Analysis Competition IFEST 2026 (FMIPA UNPAD); National Participant — Academic Competition of Data Science (ACTION) 2025 (FMIPA UNESA); Committee Certificate — Philanthropy FTMM UNAIR (2025).</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+function setLang(lang) {
+  document.body.setAttribute('data-lang', lang);
+  document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  const pdfBtn = document.getElementById('dl-pdf');
+  const docxBtn = document.getElementById('dl-docx');
+  if (lang === 'en') {
+    pdfBtn.href = 'CV_Greg_Ezra_EN.pdf';
+    pdfBtn.textContent = '⬇ Download PDF (EN)';
+    docxBtn.href = 'CV_Greg_Ezra_EN.docx';
+    docxBtn.textContent = '⬇ Download Word (.docx)';
+  } else {
+    pdfBtn.href = 'CV_Greg_Ezra_ID.pdf';
+    pdfBtn.textContent = '⬇ Unduh PDF (ID)';
+    docxBtn.href = 'CV_Greg_Ezra_ID.docx';
+    docxBtn.textContent = '⬇ Unduh Word (.docx)';
+  }
+}
+</script>
+</body>
+</html>
